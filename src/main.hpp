@@ -135,7 +135,7 @@ extern bool autoLimbReload;
     #include <GL/glew.h>
   #endif
   #include <GL/gl.h>
-  #include <GL/glu.h>
+//   #include <GL/glu.h>
   #ifdef LINUX
   	typedef uint16_t GLhalf;
   #endif
@@ -603,7 +603,7 @@ typedef struct polymodel_t
 	polytriangle_t* faces;
 	uint64_t numfaces;
     GLuint vao;
-    
+
     // vbos
 	GLuint positions;
 	GLuint colors;

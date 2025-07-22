@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.20)
 project(barony)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -344,23 +344,19 @@ IF (APPLE)
   find_package(SDL2_ttf REQUIRED)
   find_package(IOKit REQUIRED)
 ELSE (APPLE)
+	message("Building sdl2 with linux")
+
 	find_package(OpenGL REQUIRED)
-	IF(NOT WIN32)
-		INCLUDE(FindPkgConfig)
-		PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
-		PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-		PKG_SEARCH_MODULE(SDL2NET REQUIRED SDL2_net)
-		PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf)
-	ELSE(NOT WIN32)
-		find_package(SDL2 REQUIRED)
-		find_package(SDL2_image REQUIRED)
-	ENDIF(NOT WIN32)
-	find_package(SDL2_net REQUIRED) # ...why the duplication?
-	find_package(SDL2_ttf REQUIRED)
+	find_package(SDL2 CONFIG REQUIRED)
+	find_package(SDL2_image CONFIG REQUIRED)
+	find_package(SDL2_net CONFIG REQUIRED)
+	find_package(SDL2_ttf CONFIG REQUIRED)
 ENDIF (APPLE)
-find_package(PhysFS REQUIRED)
-find_package(RapidJson REQUIRED)
-INCLUDE_DIRECTORIES(${RAPID_JSON_INCLUDE_DIR})
+
+find_package(PhysFS CONFIG REQUIRED)
+find_package(RapidJSON CONFIG REQUIRED)
+
+# INCLUDE_DIRECTORIES(${RAPID_JSON_INCLUDE_DIR})
 
 if (STEAMWORKS_ENABLED)
   find_package(NFD REQUIRED)
@@ -368,8 +364,9 @@ if (STEAMWORKS_ENABLED)
   LINK_DIRECTORIES(${NFD_LIBRARY})
 ENDIF (STEAMWORKS_ENABLED)
 
-INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2NET_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR}  ${SDL2_TTF_INCLUDE_DIRS} ${PHYSFS_INCLUDE_DIR})
-LINK_DIRECTORIES(${SDL2_LINK_DIRS} ${SDL2_LINK_DIR} ${SDL2IMAGE_LINK_DIRS} ${SDL2_IMAGE_LINK_DIR} ${SDL2NET_LINK_DIR} ${SDL2_NET_LINK_DIRS} ${SDL2TTF_LINK_DIR}  ${SDL2_TTF_LINK_DIRS} ${PHYSFS_LINK_DIR})
+# INCLUDE_DIRECTORIES(${SDL2_INCLUDE_DIRS} ${SDL2_INCLUDE_DIR} ${SDL2IMAGE_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIR} ${SDL2NET_INCLUDE_DIR} ${SDL2_NET_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR}  ${SDL2_TTF_INCLUDE_DIRS} ${PHYSFS_INCLUDE_DIR})
+# LINK_DIRECTORIES(${SDL2_LINK_DIRS} ${SDL2_LINK_DIR} ${SDL2IMAGE_LINK_DIRS} ${SDL2_IMAGE_LINK_DIR} ${SDL2NET_LINK_DIR} ${SDL2_NET_LINK_DIRS} ${SDL2TTF_LINK_DIR}  ${SDL2_TTF_LINK_DIRS} ${PHYSFS_LINK_DIR})
+
 
 # if (NOT WIN32)
 # else()
@@ -406,7 +403,7 @@ endif()
 if(NOT APPLE)
   #Linux needs these two.
   #Macs have their own special line.
-  find_package(PNG REQUIRED)
+  find_package(PNG CONFIG REQUIRED)
 elseif (APPLE)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FMOD_CXX_FLAGS}")
   MESSAGE("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
@@ -480,7 +477,7 @@ endif()
 #file(GLOB_RECURSE SOUND_FILES sound/*)
 
 #add_subdirectory(books)
- 
+
 configure_file ( "${PROJECT_SOURCE_DIR}/src/Config.hpp.in" "${PROJECT_SOURCE_DIR}/src/Config.hpp")
 
 message("***************************")
@@ -600,7 +597,18 @@ if (GAME_ENABLED)
 	  # 64 bit
 	  target_link_libraries(barony -L/usr/lib64 -lstdc++)
 	endif()
-	target_link_libraries(barony ${SDL2_LIBRARIES} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_NET_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2TTF_LIBRARY})
+	# target_link_libraries(barony ${SDL2_LIBRARIES} ${SDL2_LIBRARY} ${SDL2IMAGE_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_NET_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2TTF_LIBRARY})
+	message("Link barony with sdl2")
+	target_link_libraries(barony
+        $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+    )
+
+	target_link_libraries(barony  $<IF:$<TARGET_EXISTS:SDL2_image::SDL2_image>,SDL2_image::SDL2_image,SDL2_image::SDL2_image-static>)
+	target_link_libraries(barony  $<IF:$<TARGET_EXISTS:SDL2_net::SDL2_net>,SDL2_net::SDL2_net,SDL2_net::SDL2_net-static>)
+	target_link_libraries(barony  $<IF:$<TARGET_EXISTS:SDL2_ttf::SDL2_ttf>,SDL2_ttf::SDL2_ttf,SDL2_ttf::SDL2_ttf-static>)
+
+
 	if (STEAMWORKS_ENABLED)
 	  target_link_libraries(barony ${STEAMWORKS_LIBRARY})
 	  target_link_libraries(barony ${NFD_LIBRARY})
@@ -634,7 +642,7 @@ if (GAME_ENABLED)
   target_link_libraries(barony ${PHYSFS_LIBRARY})
   if(NOT APPLE)
 	#Remember, Mac isn't using find_package for PNG.
-	target_link_libraries(barony ${PNG_LIBRARY})
+	target_link_libraries(barony PNG::PNG)
   endif()
   if (APPLE)
 	target_link_libraries(barony ${IOKit_LIBRARY})

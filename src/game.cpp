@@ -326,7 +326,7 @@ void TimerExperiments::updateEntityInterpolationPosition(Entity* entity)
 	if ( entity->bNeedsRenderPositionInit )
 	{
 		// wait for entity to position itself in the world by setting useful x/y vlues (monster limbs etc)
-		if ( abs(entity->x) > 0.01 || abs(entity->y) > 0.01 ) 
+		if ( abs(entity->x) > 0.01 || abs(entity->y) > 0.01 )
 		{
 			entity->bNeedsRenderPositionInit = false;
 
@@ -680,11 +680,11 @@ void TimerExperiments::updateClocks()
 		cameraCurrentState[i].roll.normalize(0, 2 * PI);
 		cameraCurrentState[i].pitch.normalize(0, 2 * PI);
 
-		cameraRenderState[i].yaw.position = 
+		cameraRenderState[i].yaw.position =
 			lerpAngle(cameraPreviousState[i].yaw.position, cameraCurrentState[i].yaw.position, alpha);
-		cameraRenderState[i].roll.position = 
+		cameraRenderState[i].roll.position =
 			lerpAngle(cameraPreviousState[i].roll.position, cameraCurrentState[i].roll.position, alpha);
-		cameraRenderState[i].pitch.position = 
+		cameraRenderState[i].pitch.position =
 			lerpAngle(cameraPreviousState[i].pitch.position, cameraCurrentState[i].pitch.position, alpha);
 
 		cameraRenderState[i].yaw.normalize(0, 2 * PI);
@@ -705,11 +705,11 @@ void TimerExperiments::updateClocks()
 		entity->lerpCurrentState.roll.normalize(0, 2 * PI);
 		entity->lerpCurrentState.pitch.normalize(0, 2 * PI);
 
-		entity->lerpRenderState.yaw.position = 
+		entity->lerpRenderState.yaw.position =
 			lerpAngle(entity->lerpPreviousState.yaw.position, entity->lerpCurrentState.yaw.position, alpha);
-		entity->lerpRenderState.roll.position = 
+		entity->lerpRenderState.roll.position =
 			lerpAngle(entity->lerpPreviousState.roll.position, entity->lerpCurrentState.roll.position, alpha);
-		entity->lerpRenderState.pitch.position = 
+		entity->lerpRenderState.pitch.position =
 			lerpAngle(entity->lerpPreviousState.pitch.position, entity->lerpCurrentState.pitch.position, alpha);
 
 		entity->lerpRenderState.yaw.normalize(0, 2 * PI);
@@ -1018,7 +1018,7 @@ void gameLogic(void)
 	DebugStats.eventsT1 = std::chrono::high_resolution_clock::now();
 
 	// camera shaking
-	for (int c = 0; c < MAXPLAYERS; ++c) 
+	for (int c = 0; c < MAXPLAYERS; ++c)
 	{
 		if ( !splitscreen && c != clientnum )
 		{
@@ -1231,7 +1231,7 @@ void gameLogic(void)
             // initialize
             gearsize = 40000 * (xres / 1280.f);
         }
-        
+
 		// rotate gear
 		gearrot += 1;
 		if ( gearrot >= 360 )
@@ -1511,7 +1511,7 @@ void gameLogic(void)
 						steamAchievementClient(c, "BARONY_ACH_GIFTS_ETERNALS");
 					}
 
-					if ( stats[c]->type == SKELETON 
+					if ( stats[c]->type == SKELETON
 						&& stats[c]->weapon && stats[c]->weapon->type == ARTIFACT_AXE
 						&& stats[c]->cloak && stats[c]->cloak->type == CLOAK_PROTECTION
 						&& ((stats[c]->mask && stats[c]->mask->type == MASK_EYEPATCH) || !stats[c]->mask)
@@ -1586,7 +1586,7 @@ void gameLogic(void)
 
 									if ( followerCount >= 4 && !(achievementObserver.playerAchievements[c].caughtInAMosh) )
 									{
-										if ( follower->monsterTarget != 0 
+										if ( follower->monsterTarget != 0
 											&& (follower->monsterState == MONSTER_STATE_ATTACK || follower->monsterState == MONSTER_STATE_HUNT) &&
 											(followerStats->type == SENTRYBOT || followerStats->type == SPELLBOT) )
 										{
@@ -1718,7 +1718,7 @@ void gameLogic(void)
 					}
 					if ( entity->behavior != nullptr )
 					{
-						if ( gameloopFreezeEntities 
+						if ( gameloopFreezeEntities
 							&& entity->behavior != &actPlayer
 							&& entity->behavior != &actPlayerLimb
 							&& entity->behavior != &actDeathGhost
@@ -2509,7 +2509,7 @@ void gameLogic(void)
 
 										serverUpdateAllyStat(c, monster->getUID(), monsterStats->LVL, monsterStats->HP, monsterStats->MAXHP, monsterStats->type);
 									}
-                                    
+
                                     if (players[c]->isLocalPlayer() && monsterStats->name[0] && (!monsterNameIsGeneric(*monsterStats) || monsterStats->type == SLIME)) {
                                         Entity* nametag = newEntity(-1, 1, map.entities, nullptr);
                                         nametag->x = monster->x;
@@ -2654,8 +2654,8 @@ void gameLogic(void)
 					// the scheduled update needs to be reset to 0 to be set again.
 					updatePlayerHealth = true;
 				}
-				else if ( (ticks % (TICKS_PER_SECOND * 3) == 0) 
-					&& (serverLastPlayerHealthUpdate == 0 || ((ticks - serverLastPlayerHealthUpdate) >= 2 * TICKS_PER_SECOND)) 
+				else if ( (ticks % (TICKS_PER_SECOND * 3) == 0)
+					&& (serverLastPlayerHealthUpdate == 0 || ((ticks - serverLastPlayerHealthUpdate) >= 2 * TICKS_PER_SECOND))
 				)
 				{
 					// regularly update every 3 seconds, only if the last update was more than 2 seconds ago.
@@ -2900,7 +2900,7 @@ void gameLogic(void)
 					}
 
 					// drop any inventory items you don't have room for
-					if ( itemCategory(item) != SPELL_CAT 
+					if ( itemCategory(item) != SPELL_CAT
 						&& item->x != Player::PaperDoll_t::ITEM_PAPERDOLL_COORDINATE
 						&& item->x != Player::PaperDoll_t::ITEM_RETURN_TO_INVENTORY_COORDINATE
 						&& (item->x >= players[player]->inventoryUI.getSizeX() || item->y >= backpack_sizey[player]) )
@@ -2922,7 +2922,7 @@ void gameLogic(void)
 					}
 					else
 					{
-						if ( auto_appraise_new_items && players[player]->inventoryUI.appraisal.timer == 0 
+						if ( auto_appraise_new_items && players[player]->inventoryUI.appraisal.timer == 0
 							&& !(item->identified) && players[player]->inventoryUI.appraisal.appraisalPossible(item) )
 						{
 							int appraisal_time = players[player]->inventoryUI.appraisal.getAppraisalTime(item);
@@ -3320,7 +3320,7 @@ void gameLogic(void)
 									if ( fabs(entity->vel_x) > 0.0001 || fabs(entity->vel_y) > 0.0001 )
 									{
 										double ox = 0, oy = 0, onewx = 0, onewy = 0;
-										if ( entity->behavior == &actPlayer 
+										if ( entity->behavior == &actPlayer
 											|| entity->behavior == &actMonster
 											|| entity->behavior == &actDeathGhost )
 										{
@@ -3566,7 +3566,7 @@ void gameLogic(void)
 				}
 
 				// drop any inventory items you don't have room for
-				if ( itemCategory(item) != SPELL_CAT 
+				if ( itemCategory(item) != SPELL_CAT
 					&& item->x != Player::PaperDoll_t::ITEM_PAPERDOLL_COORDINATE
 					&& item->x != Player::PaperDoll_t::ITEM_RETURN_TO_INVENTORY_COORDINATE
 					&& (item->x >= players[clientnum]->inventoryUI.getSizeX() || item->y >= backpack_sizey) )
@@ -3588,7 +3588,7 @@ void gameLogic(void)
 				}
 				else
 				{
-					if ( auto_appraise_new_items && players[clientnum]->inventoryUI.appraisal.timer == 0 
+					if ( auto_appraise_new_items && players[clientnum]->inventoryUI.appraisal.timer == 0
 						&& !(item->identified) && players[clientnum]->inventoryUI.appraisal.appraisalPossible(item) )
 					{
 						int appraisal_time = players[clientnum]->inventoryUI.appraisal.getAppraisalTime(item);
@@ -3635,7 +3635,7 @@ void gameLogic(void)
 	if (!gamePaused && !intro && playeralive)
 	{
 		++completionTime;
-		for ( int c = 0; c < MAXPLAYERS; ++c ) 
+		for ( int c = 0; c < MAXPLAYERS; ++c )
 		{
 			players[c]->compendiumProgress.playerAliveTimeTotal++;
 		}
@@ -4569,7 +4569,7 @@ bool handleEvents(void)
 				char buf[32] = "";
 				float rebindingDeadzone = Input::getJoystickRebindingDeadzone() * 32768.f;
 				switch (event.caxis.axis) {
-				case SDL_CONTROLLER_AXIS_LEFTX: 
+				case SDL_CONTROLLER_AXIS_LEFTX:
 					if ( event.caxis.value < -rebindingDeadzone )
 					{
 						snprintf(buf, sizeof(buf), "Pad%dStickLeftX-", event.caxis.which);
@@ -4579,7 +4579,7 @@ bool handleEvents(void)
 						snprintf(buf, sizeof(buf), "Pad%dStickLeftX+", event.caxis.which);
 					}
 					break;
-				case SDL_CONTROLLER_AXIS_LEFTY: 
+				case SDL_CONTROLLER_AXIS_LEFTY:
 					if ( event.caxis.value < -rebindingDeadzone )
 					{
 						snprintf(buf, sizeof(buf), "Pad%dStickLeftY-", event.caxis.which);
@@ -4589,7 +4589,7 @@ bool handleEvents(void)
 						snprintf(buf, sizeof(buf), "Pad%dStickLeftY+", event.caxis.which);
 					}
 					break;
-				case SDL_CONTROLLER_AXIS_RIGHTX: 
+				case SDL_CONTROLLER_AXIS_RIGHTX:
 					if ( event.caxis.value < -rebindingDeadzone )
 					{
 						snprintf(buf, sizeof(buf), "Pad%dStickRightX-", event.caxis.which);
@@ -4609,16 +4609,16 @@ bool handleEvents(void)
 						snprintf(buf, sizeof(buf), "Pad%dStickRightY+", event.caxis.which);
 					}
 					break;
-				case SDL_CONTROLLER_AXIS_TRIGGERLEFT: 
+				case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
 					if ( abs(event.caxis.value) > rebindingDeadzone )
 					{
-						snprintf(buf, sizeof(buf), "Pad%dLeftTrigger", event.caxis.which); 
+						snprintf(buf, sizeof(buf), "Pad%dLeftTrigger", event.caxis.which);
 					}
 					break;
-				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT: 
+				case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
 					if ( abs(event.caxis.value) > rebindingDeadzone )
 					{
-						snprintf(buf, sizeof(buf), "Pad%dRightTrigger", event.caxis.which); 
+						snprintf(buf, sizeof(buf), "Pad%dRightTrigger", event.caxis.which);
 					}
 					break;
 				}
@@ -5176,7 +5176,7 @@ static Uint64 lastGameTickCount = 0;
 static Uint64 framerateAccumulatedTicks = 0;
 
 // credit "computerBear" for preciseSleep/preciseSleepWindows https://blat-blatnik.github.io/computerBear/making-accurate-sleep-function/
-void preciseSleep(double seconds) 
+void preciseSleep(double seconds)
 {
 	static double estimate = 5e-3;
 	static double mean = 5e-3;
@@ -5385,7 +5385,7 @@ void ingameHud()
 		}
 
 		// if useItemDropdownOnGamepad, then 'b' will close inventory, with a 'couple' checks..
-		if ( players[player]->isLocalPlayer() 
+		if ( players[player]->isLocalPlayer()
 			&& !players[player]->shootmode
 			&& (players[player]->inventoryUI.useItemDropdownOnGamepad != Player::Inventory_t::GAMEPAD_DROPDOWN_DISABLE)
 			&& !inputs.getVirtualMouse(player)->draw_cursor
@@ -5446,7 +5446,7 @@ void ingameHud()
 
 		// spellcasting
 		// player needs to be alive
-		if ( players[player]->isLocalPlayerAlive() 
+		if ( players[player]->isLocalPlayerAlive()
 			&& !gamePaused )
 		{
             const bool shootmode = players[player]->shootmode;
@@ -5482,7 +5482,7 @@ void ingameHud()
 						}
 						if ( !shootmode ) // check we dont conflict with system bindings
 						{
-							if ( players[player]->messageZone.logWindow || players[player]->minimap.mapWindow 
+							if ( players[player]->messageZone.logWindow || players[player]->minimap.mapWindow
 								|| FollowerMenu[player].followerMenuIsOpen() || CalloutMenu[player].calloutMenuIsOpen() )
 							{
 								allowCasting = false;
@@ -5970,7 +5970,7 @@ void ingameHud()
 							draggingItemFrame->setSize(SDL_Rect{ pos.x, pos.y, draggingItemFrame->getSize().w, draggingItemFrame->getSize().h });
 						}
 					}
-                    
+
 					if ( *cvar_debugVMouse )
 					{
 						// debug for controllers
@@ -6168,7 +6168,7 @@ void drawAllPlayerCameras() {
         // drunkenness spinning
 	    double cosspin = cos(ticks % 360 * PI / 180.f) * 0.25;
 	    double sinspin = sin(ticks % 360 * PI / 180.f) * 0.25;
-        
+
         // setup a graphics frame
         beginGraphics();
 
@@ -6210,7 +6210,7 @@ void drawAllPlayerCameras() {
 					//messagePlayer(0, "%3.2f | %3.2f", players[c]->entity->yaw, oldYaw);
 				}
 			}
-   
+
             // activate ghost fog (if necessary)
             if (players[c]->ghost.isActive()) {
                 *cvar_hdrBrightness = {0.9f, 0.9f, 1.2f, 1.0f};
@@ -6365,7 +6365,7 @@ void drawAllPlayerCameras() {
 			DebugStats.drawWorldT5 = std::chrono::high_resolution_clock::now();
 			drawEntities3D(&camera, REALCOLORS);
 			glEndCamera(&camera, true, map);
-            
+
             // undo ghost fog
             if (players[c]->ghost.isActive()) {
                 *cvar_hdrBrightness = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -6844,7 +6844,7 @@ int main(int argc, char** argv)
 		}
 		printlog("Data path is %s", datadir);
 		printlog("Output path is %s", outputdir);
-        
+
         // init sdl
         Uint32 init_flags = SDL_INIT_VIDEO | SDL_INIT_EVENTS;
         init_flags |= SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC;
@@ -7383,7 +7383,7 @@ int main(int argc, char** argv)
 					{
 						pauseGame(0, MAXPLAYERS);
 					}
-					else 
+					else
 					{
 						if ( MainMenu::main_menu_frame )
 						{
@@ -7478,7 +7478,7 @@ int main(int argc, char** argv)
 				}
 
 
-				for (int c = 0; c < MAXPLAYERS; ++c) 
+				for (int c = 0; c < MAXPLAYERS; ++c)
 				{
 					auto& camera = cameras[c];
 					auto& cvars = cameravars[c];
@@ -7653,7 +7653,7 @@ int main(int argc, char** argv)
 					int iy = (int)cameras[clientnum].y;
 					if ( ix >= 0 && ix < map.width && iy >= 0 && iy < map.height )
 					{
-						printTextFormatted(font8x8_bmp, 8, 44, "pos: x: %d y: %d pathmapZone: %d", 
+						printTextFormatted(font8x8_bmp, 8, 44, "pos: x: %d y: %d pathmapZone: %d",
 							ix, iy, pathMapGrounded[iy + ix * map.height]);
 					}
 				}
@@ -7664,7 +7664,7 @@ int main(int argc, char** argv)
 					{
 						int light = players[clientnum]->entity->entityLight();
 						int tiles = light / 16;
-						int lightAfterReductions = std::max(TOUCHRANGE, 
+						int lightAfterReductions = std::max(TOUCHRANGE,
 							players[clientnum]->entity->entityLightAfterReductions(*stats[clientnum], players[clientnum]->entity));
 						int tilesAfterReductions = lightAfterReductions / 16;
 						printTextFormatted(font8x8_bmp, 8, 44, "base light: %3d, tiles: %2d | modified light: %3d, tiles: %2d",
@@ -7676,7 +7676,7 @@ int main(int argc, char** argv)
 			DebugStats.t10FrameLimiter = std::chrono::high_resolution_clock::now();
 			if ( logCheckMainLoopTimers )
 			{
-				std::chrono::duration<double> time_span = 
+				std::chrono::duration<double> time_span =
 					std::chrono::duration_cast<std::chrono::duration<double>>(DebugStats.t10FrameLimiter - DebugStats.t11End);
 				double timer = time_span.count() * 1000;
 				if ( timer > ((1000.f / (fps) * 1.4)) )

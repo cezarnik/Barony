@@ -388,7 +388,7 @@ namespace MainMenu {
         Video = 1 << 1,
     };
     static int video_refresh = VideoRefresh::None;
-    
+
     // if the following is set true, a restart prompt will appear when the user
     // saves/applies the settings menu
     static bool restartPromptRequired = false;
@@ -1055,7 +1055,7 @@ namespace MainMenu {
 			++playercount;
 	    }
 		splitscreen = playercount > 1;
-		
+
 		// on nintendo, we have to limit the FPS to 30 for 3+ players.
 #ifdef NINTENDO
 		fpsLimit = playercount > 2 ? 30 : 60;
@@ -1361,8 +1361,8 @@ namespace MainMenu {
 			    "*#images/ui/Main Menus/Disconnect/UI_Disconnect_Window00.png",
 			    "background"
 		    );
-		} 
-		else if ( size == SIZE_BIG ) 
+		}
+		else if ( size == SIZE_BIG )
 		{
 		    frame->setSize(SDL_Rect{(Frame::virtualScreenX - 548) / 2, (Frame::virtualScreenY - 264) / 2, 548, 264});
 		    frame->setActualSize(SDL_Rect{0, 0, 548, 264});
@@ -1545,7 +1545,7 @@ namespace MainMenu {
 		text->setFont(smallfont_no_outline);
 		text->setText(window_text);
 		text->setJustify(Field::justify_t::CENTER);
-  
+
         const int buttonsWidth = (leftRed ? 130 : 108) + (rightRed ? 130 : 108) + 4;
 
 		auto okay = frame->addButton("okay");
@@ -2900,12 +2900,13 @@ namespace MainMenu {
         }
 		current_recording_audio_device = recording_audio_device;
 		current_audio_device = audio_device;
-        if (fmod_speakermode != speaker_mode) {
-            fmod_speakermode = (FMOD_SPEAKERMODE)speaker_mode;
-            if (initialized) {
-                restartPromptRequired = true;
-            }
-        }
+		// KOLYA_TODO: fix nonexisting fmod_speakermode
+        // if (fmod_speakermode != speaker_mode) {
+        //     fmod_speakermode = (FMOD_SPEAKERMODE)speaker_mode;
+        //     if (initialized) {
+        //         restartPromptRequired = true;
+        //     }
+        // }
 		MainMenu::master_volume = std::min(std::max(0.f, master_volume / 100.f), 1.f);
 		sfxvolume = std::min(std::max(0.f, gameplay_volume / 100.f), 1.f);
 		sfxAmbientVolume = std::min(std::max(0.f, ambient_volume / 100.f), 1.f);
@@ -3030,7 +3031,8 @@ namespace MainMenu {
 		settings.use_voice_custom_rolloff = VoiceChat.activeSettings.use_custom_rolloff;
 		VoiceChat.mainmenuSettings = VoiceChat.activeSettings;
 #endif
-        settings.speaker_mode = (int)fmod_speakermode;
+		// KOLYA_TODO fix fmod_speakermode
+        // settings.speaker_mode = (int)fmod_speakermode;
 		settings.master_volume = MainMenu::master_volume * 100.f;
 		settings.gameplay_volume = (float)sfxvolume * 100.f;
 		settings.ambient_volume = (float)sfxAmbientVolume * 100.f;
@@ -3845,7 +3847,7 @@ namespace MainMenu {
 			u8" \n"
 			u8" \n"
 			u8"Thank you!\n";
-		
+
 		char buf[1024];
 		const char date[] = __DATE__;
 		const char* year = (const char*)date + sizeof(date) - 5;
@@ -3988,7 +3990,7 @@ namespace MainMenu {
 			Language::get(5030), Language::get(5008),
 			[](Button& button) {
 				closeBinary();
-				
+
 				soundActivate();
 
 				if ( main_menu_frame )
@@ -4011,7 +4013,7 @@ namespace MainMenu {
 						}
 					}
 				}
-			}, 
+			},
 			[](Button& button) {
 				closeBinary();
 
@@ -4065,7 +4067,7 @@ namespace MainMenu {
 
 	static void settingsCustomizeInventorySorting(Button& button) {
 		soundActivate();
-        
+
         auto dimmer = main_menu_frame->addFrame("dimmer");
         dimmer->setSize(SDL_Rect{0, 0, Frame::virtualScreenX, Frame::virtualScreenY});
         dimmer->setColor(makeColor(0, 0, 0, 63));
@@ -4752,7 +4754,7 @@ namespace MainMenu {
 
 	static bool settingsBind(int player_index, int device_index, const char* binding, const char* input);
 	static bool bind_mode = false;
- 
+
     static const char* translateBinding(const char* binding) {
         int c = 5970;
 		if ( !strcmp(binding, "Call Out") )
@@ -5765,11 +5767,11 @@ namespace MainMenu {
             Language::get(5067), Language::get(5068),
 			allSettings.show_messages.chat, [](Button& button){soundToggleSetting(button); allSettings.show_messages.chat = button.isPressed();});
 
-		y += settingsAddBooleanOption(*subwindow, y, "messages_progression", 
+		y += settingsAddBooleanOption(*subwindow, y, "messages_progression",
             Language::get(5069), Language::get(5070),
 			allSettings.show_messages.progression, [](Button& button){soundToggleSetting(button); allSettings.show_messages.progression = button.isPressed();});
 
-		y += settingsAddBooleanOption(*subwindow, y, "messages_interaction", 
+		y += settingsAddBooleanOption(*subwindow, y, "messages_interaction",
             Language::get(5071), Language::get(5072),
 			allSettings.show_messages.interaction, [](Button& button){soundToggleSetting(button); allSettings.show_messages.interaction = button.isPressed();});
 
@@ -5777,7 +5779,7 @@ namespace MainMenu {
             Language::get(5073), Language::get(5074),
 			allSettings.show_messages.inspection, [](Button& button){soundToggleSetting(button); allSettings.show_messages.inspection = button.isPressed();});
 
-		y += settingsAddBooleanOption(*subwindow, y, "messages_hint", 
+		y += settingsAddBooleanOption(*subwindow, y, "messages_hint",
             Language::get(5075), Language::get(5076),
 			allSettings.show_messages.hint, [](Button& button){soundToggleSetting(button); allSettings.show_messages.hint = button.isPressed();});
 
@@ -5846,7 +5848,7 @@ namespace MainMenu {
 			}
 		}
 	}
-    
+
     static void settingsControlsPopulate(int player, int device, const char* profile, Setting setting_to_select);
 
 	static void settingsBindings(int player_index, int device_index, const char* profile) {
@@ -5979,7 +5981,7 @@ namespace MainMenu {
 				auto parent_background = static_cast<Frame*>(parent->getParent()); assert(parent_background);
 				parent_background->removeSelf();
 				allSettings.bindings.save();
-                
+
                 assert(main_menu_frame);
                 auto settings = main_menu_frame->findFrame("settings"); assert(settings);
                 auto subwindow = settings->findFrame("settings_subwindow"); assert(subwindow);
@@ -5999,7 +6001,7 @@ namespace MainMenu {
 		int y = 0;
 
 		y += settingsAddSubHeader(*subwindow, y, "bindings_header", Language::get(5083), true);
-        
+
         std::vector<Setting> bindings;
         bindings.reserve(getBindings(profile).size());
         for (auto& binding : getBindings(profile)) {
@@ -6033,7 +6035,7 @@ namespace MainMenu {
 					auto settings = static_cast<Frame*>(subwindow->getParent()); assert(settings);
 					auto tooltip = settings->findField("tooltip"); assert(tooltip);
 					char buf[256];
-					
+
 					if (inputs.hasController(getMenuOwner())) {
 						snprintf(buf, sizeof(buf), Language::get(5087),
 							translateBinding(bound_binding.c_str()));
@@ -6143,14 +6145,14 @@ bind_failed:
 				}
 			}
 			});
-        
+
 		hookSettings(*subwindow, bindings);
 		settingsSubwindowFinalize(*subwindow, y, bindings[0]);
 		settingsSelect(*subwindow, bindings[0]);
 	}
 
 	static std::vector<const char*> crosshairs;
-    
+
 	static void settingsCrosshairType(Button& button) {
 		settingsOpenDropdown(button, "shootmode_crosshair", DropdownType::Short, [](Frame::entry_t& entry) {
 			soundActivate();
@@ -6217,12 +6219,12 @@ bind_failed:
 		y += settingsAddSlider(*settings_subwindow, y, "shootmode_crosshair_opacity", Language::get(5125), Language::get(5126),
 			allSettings.shootmode_crosshair_opacity, 0, 100, sliderPercent, [
 			](Slider& slider) {soundSliderSetting(slider, true); allSettings.shootmode_crosshair_opacity = slider.getValue(); });
-   
+
         crosshairs.clear();
         for (int c = 5092; c <= 5103; ++c) {
             crosshairs.push_back(Language::get(c));
         }
-   
+
 		const char* selected_mode = crosshairs[allSettings.shootmode_crosshair];
 		y += settingsAddDropdown(*settings_subwindow, y, "shootmode_crosshair", Language::get(5127), Language::get(5128),
 			false, crosshairs, selected_mode, settingsCrosshairType);
@@ -6416,7 +6418,7 @@ bind_failed:
                 return buf;
             }
         };
-        
+
 		y += settingsAddSlider(*settings_subwindow, y, "fps", Language::get(5169), Language::get(5170),
 			allSettings.fps ? allSettings.fps : AUTO_FPS, MIN_FPS, AUTO_FPS, sliderFPS, [](Slider& slider){soundSliderSetting(slider, true); allSettings.fps = slider.getValue();});
 		y += settingsAddBooleanOption(*settings_subwindow, y, "hdr_enabled", Language::get(5171), Language::get(5172),
@@ -6504,7 +6506,7 @@ bind_failed:
 		for (auto& d : audio_drivers) {
 			drivers_formatted_ptrs.push_back(d.name);
 		}
-  
+
 		std::vector<const char*> modes_ptrs;
 		modes_ptrs.reserve(6149 - 6141 + 1);
 		for (int c = 6141; c <= 6149; ++c) {
@@ -6550,7 +6552,7 @@ bind_failed:
 #ifdef USE_FMOD
 		y += settingsAddSlider(*settings_subwindow, y, "voice_volume", Language::get(6445), Language::get(6446),
 			allSettings.voice_volume, 0, 100, sliderPercent, [](Slider& slider) {
-				soundSliderSetting(slider, true); 
+				soundSliderSetting(slider, true);
 				allSettings.voice_volume = slider.getValue();
 				VoiceChat.mainmenuSettings.voice_global_volume = allSettings.voice_volume / 100.0;
 				setGlobalVolume(allSettings.master_volume / 100.0, allSettings.music_volume / 100.0, allSettings.gameplay_volume / 100.0,
@@ -6880,7 +6882,7 @@ bind_failed:
         bound_player = player;
         bound_device = device;
         bound_profile = profile;
-        
+
         Frame* settings_subwindow;
         if ((settings_subwindow = settingsSubwindowSetup("Controls", false)) == nullptr) {
             auto settings = main_menu_frame->findFrame("settings"); assert(settings);
@@ -6889,12 +6891,12 @@ bind_failed:
             return;
         }
         int y = 0;
-        
+
         // controller graph
         if (device == 1) {
             const auto& input = Input::inputs[player];
             const auto controllerType = input.getControllerType();
-            
+
             y += settingsAddSubHeader(*settings_subwindow, y, "layout_header", Language::get(5205));
             y += 8;
             const char* path;
@@ -6934,7 +6936,7 @@ bind_failed:
             const int x = (int)(settings_subwindow->getSize().w - image->getWidth()) / 2;
             const SDL_Rect img_pos{x, y, (int)image->getWidth(), (int)image->getHeight()};
             auto layout = settings_subwindow->addImage(img_pos, 0xffffffff, path, "layout");
-            
+
             struct ButtonBinding {
                 const char* name;
                 int x;
@@ -6942,7 +6944,7 @@ bind_failed:
                 bool pressed;
                 const char* text;
             };
-            
+
             std::vector<ButtonBinding> list;
             if (controllerType == Input::ControllerType::PlayStation) {
                 const int r = x + (int)image->getWidth() + 4;
@@ -7087,14 +7089,14 @@ bind_failed:
                 const auto path = input.getGlyphPathForInput(
                     b.name, b.pressed, controllerType);
                 const auto img = Image::get(path.c_str()); assert(img);
-                
+
                 const int w = img->getWidth();
                 const int h = img->getHeight();
-                
+
                 constexpr int fieldHeight = 48;
                 auto field = settings_subwindow->addField("", 1024);
                 field->setFont(smallfont_outline);
-                
+
                 if (b.text) {
                     field->setText(b.text);
                 } else {
@@ -7117,7 +7119,7 @@ bind_failed:
                         }
                     }
                 }
-                
+
                 if (b.x) {
                     // right side
                     field->setHJustify(Field::justify_t::LEFT);
@@ -7144,13 +7146,13 @@ bind_failed:
                     settings_subwindow->addImage(pos, 0xffffffff, path.c_str(), "button");
                 }
             }
-            
+
             y += img_pos.h + 6;
             y += 20;
         }
-        
+
         y += settingsAddSubHeader(*settings_subwindow, y, "bindings_header", Language::get(5207), true);
-        
+
         static std::vector<std::string> players;
         static std::vector<const char*> player_ptrs;
         if (players.empty()) {
@@ -7172,7 +7174,7 @@ bind_failed:
                     [](Frame::entry_t& entry){
                         soundActivate();
                         const int player = (int)(entry.name.back() - '1');
-                    
+
                         assert(main_menu_frame);
                         auto settings = main_menu_frame->findFrame("settings"); assert(settings);
                         auto subwindow = settings->findFrame("settings_subwindow"); assert(subwindow);
@@ -7188,14 +7190,14 @@ bind_failed:
                         gradient->pos.y = size.y;
                     });
             });
-        
+
 #ifndef NINTENDO
         const std::vector<const char*> devices = {
             Language::get(5079),
             Language::get(5080),
             //Language::get(5081),
         };
-        
+
         y += settingsAddDropdown(*settings_subwindow, y, "device_dropdown_button",
             Language::get(5211), Language::get(5212), false, devices, devices[device],
             [](Button& button){
@@ -7204,7 +7206,7 @@ bind_failed:
                     [](Frame::entry_t& entry){
                     soundActivate();
                     const int device = getDeviceIndexForName(entry.text.c_str());
-                    
+
                     assert(main_menu_frame);
                     auto settings = main_menu_frame->findFrame("settings"); assert(settings);
                     auto subwindow = settings->findFrame("settings_subwindow"); assert(subwindow);
@@ -7221,12 +7223,12 @@ bind_failed:
                     });
             });
 #endif
-        
+
         std::vector<const char*> layouts;
         for (auto& layout : defaultBindings) {
             layouts.emplace_back(layout.name.c_str());
         }
-        
+
         y += settingsAddDropdown(*settings_subwindow, y, "profile_dropdown_button",
             Language::get(5213), Language::get(5214), false, layouts, profile,
             [](Button& button){
@@ -7243,13 +7245,13 @@ bind_failed:
                         allSettings.bindings.gamepad_bindings[bound_player].emplace(binding.action, binding.gamepad);
                         allSettings.bindings.joystick_bindings[bound_player].emplace(binding.action, binding.joystick);
                     }
-                    
+
                     // using the "Minimal" layout causes facehotbar / "Modern" hotbar from working at all.
                     // so make sure to disable that when Minimal is selected.
                     if (entry.text == Language::get(6017)) { // "Minimal"
                         allSettings.controls[bound_player].gamepad_facehotbar = false;
                     }
-                    
+
                     assert(main_menu_frame);
                     auto settings = main_menu_frame->findFrame("settings"); assert(settings);
                     auto subwindow = settings->findFrame("settings_subwindow"); assert(subwindow);
@@ -7294,7 +7296,7 @@ bind_failed:
 			y += settingsAddSlider(*settings_subwindow, y, "quick_turn_speed_mkb_control", Language::get(6310), Language::get(6311),
 				allSettings.controls[bound_player].quick_turn_speed_mkb_control, 1.f, 5.f, sliderFloorInt, [](Slider& slider)
 				{soundSliderSetting(slider, true); allSettings.controls[bound_player].quick_turn_speed_mkb_control = slider.getValue(); });
-            
+
             hookSettings(*settings_subwindow,
                 {{Setting::Type::Customize, "bindings"},
                 {Setting::Type::Slider, "mouse_sensitivity"},
@@ -7305,7 +7307,7 @@ bind_failed:
 				{Setting::Type::Slider, "quick_turn_speed_mkb_control"},
             });
         }
-        
+
         // Gamepad settings
         if (device == 1) {
             y += settingsAddSubHeader(*settings_subwindow, y, "settings", Language::get(5228));
@@ -7329,7 +7331,7 @@ bind_failed:
 			y += settingsAddSlider(*settings_subwindow, y, "quick_turn_speed_control", Language::get(6310), Language::get(6311),
 				allSettings.controls[bound_player].quick_turn_speed_control, 1.f, 5.f, sliderFloorInt, [](Slider& slider)
 				{soundSliderSetting(slider, true); allSettings.controls[bound_player].quick_turn_speed_control = slider.getValue(); });
-            
+
             hookSettings(*settings_subwindow,
                 {{Setting::Type::Customize, "bindings"},
                 {Setting::Type::Dropdown, "gamepad_facehotbar"},
@@ -7340,7 +7342,7 @@ bind_failed:
 				{Setting::Type::Slider, "quick_turn_speed_control"},
             });
         }
-            
+
         hookSettings(*settings_subwindow,
             {{Setting::Type::Dropdown, "player_dropdown_button"},
 #ifndef NINTENDO
@@ -7349,7 +7351,7 @@ bind_failed:
             {Setting::Type::Dropdown, "profile_dropdown_button"},
             {Setting::Type::Customize, "bindings"},
         });
-        
+
         settingsSubwindowFinalize(*settings_subwindow, y, setting_to_select);
         settingsSelect(*settings_subwindow, setting_to_select);
     }
@@ -7374,10 +7376,10 @@ bind_failed:
 			return;
 		}
 		int y = 0;
-  
+
         auto holiday_credits_fn = [](Button& button){
             static int page_num, page_start;
-            
+
             const auto holiday = getCurrentHoliday();
             switch (holiday) {
             default:
@@ -7385,11 +7387,11 @@ bind_failed:
             case HolidayTheme::THEME_HALLOWEEN: page_num = page_start = 6030; break;
             case HolidayTheme::THEME_XMAS: page_num = page_start = 6036; break;
             }
-            
+
             auto next_page_fn = [](Button& button){
                 soundActivate();
                 ++page_num;
-                
+
                 int page_limit;
                 const auto holiday = getCurrentHoliday();
                 switch (holiday) {
@@ -7401,12 +7403,12 @@ bind_failed:
                 if (page_num >= page_limit) {
                     page_num = page_start;
                 }
-                
+
                 auto frame = static_cast<Frame*>(button.getParent()); assert(frame);
                 auto text = frame->findField("text"); assert(text);
                 text->setText(Language::get(page_num));
             };
-            
+
             binaryPromptXL(Language::get(page_num), Language::get(6028), Language::get(6029),
                 next_page_fn, [](Button&){
                     soundCancel();
@@ -7416,12 +7418,12 @@ bind_failed:
                     settingsSelect(*settings_subwindow, {Setting::Type::Customize, "holiday_credits"});
                 }, false, true);
         };
-        
+
 		y += settingsAddSubHeader(*settings_subwindow, y, "holiday_themes", Language::get(6022));
 		y += settingsAddBooleanOption(*settings_subwindow, y, "holiday_themes", Language::get(6023), Language::get(6024),
 			allSettings.holiday_themes_enabled, [](Button& button){soundToggleSetting(button); allSettings.holiday_themes_enabled = button.isPressed();});
         y += settingsAddCustomize(*settings_subwindow, y, "holiday_credits", Language::get(6025), Language::get(6027), holiday_credits_fn);
-        
+
         auto holiday_credits_button = settings_subwindow->findButton("setting_holiday_credits_customize_button");
         if (holiday_credits_button) {
             holiday_credits_button->setText(Language::get(6026));
@@ -7455,7 +7457,7 @@ bind_failed:
 				}
 			});
 #endif
-            
+
 #if !defined(NINTENDO)
 #if defined(USE_EOS) && defined(STEAMWORKS)
 		y += settingsAddSubHeader(*settings_subwindow, y, "crossplay", Language::get(5247));
@@ -7487,7 +7489,7 @@ bind_failed:
 		settingsSubwindowFinalize(*settings_subwindow, y, {Setting::Type::Boolean, "holiday_themes"});
 		settingsSelect(*settings_subwindow, {Setting::Type::Boolean, "holiday_themes"});
 	}
- 
+
     static void settingsOnline(Button& button) {
         settingsOnlinePopulate(button, false);
     }
@@ -9122,7 +9124,7 @@ bind_failed:
 				std::string cause_of_death = "";
 				switch ( score->stats->killer ) {
 					case KilledBy::MONSTER: {
-						if ( score->stats->killer_name.empty() ) 
+						if ( score->stats->killer_name.empty() )
 						{
 							if ( score->stats->killer_monster >= 0 && score->stats->killer_monster < NUMMONSTERS )
 							{
@@ -9130,7 +9132,7 @@ bind_failed:
 								cause_of_death[0] = (char)toupper((int)cause_of_death[0]);
 							}
 						}
-						else 
+						else
 						{
 							cause_of_death = score->stats->killer_name;
 							cause_of_death[0] = (char)toupper((int)cause_of_death[0]);
@@ -9150,7 +9152,7 @@ bind_failed:
 					case KilledBy::BELL:
 						cause_of_death = Language::get(6278);
 						break;
-					default: 
+					default:
 					{
 						cause_of_death = Language::get(5794 + (int)score->stats->killer);
 						break;
@@ -9195,7 +9197,7 @@ bind_failed:
                 auto frame = static_cast<Frame*>(&widget);
                 frame->setAllowScrollBinds(frame->isSelected());
                 });
-            
+
 		    auto conduct_header = conduct->addEntry("header", true);
 		    conduct_header->text = Language::get(5280);
 		    conduct_header->color = makeColor(203, 171, 101, 255);
@@ -9324,7 +9326,7 @@ bind_failed:
                 hour, min, sec, total_score);
             time_and_score->setText(buf);
             };
-       
+
         static auto set_links = [](const char* name){
             assert(main_menu_frame);
             auto window = main_menu_frame->findFrame("leaderboards"); assert(window);
@@ -9367,7 +9369,7 @@ bind_failed:
 			{
 				snprintf(buf, sizeof(buf), fmt, index + 1, name);
 			}
-            
+
             if (index == 0) {
                 set_links(buf);
             }
@@ -9744,9 +9746,9 @@ bind_failed:
 										info.hiscore_dummy_loading = true;
 										if ( info.hiscore_loadstatus == 0 )
 										{
-											if ( button->isPressed() 
-												|| 
-												(/*!isMouseVisible() 
+											if ( button->isPressed()
+												||
+												(/*!isMouseVisible()
 												&& */!strcmp(button->getBackground(), "*images/ui/Main Menus/Leaderboards/AA_NameList_Selected_00.png")) )
 											{
 												const int numEntriesRequest = 25;
@@ -9822,7 +9824,7 @@ bind_failed:
 				scores_loaded = 2;
 				return;
 			}
-			else if ( scores_loaded == 1 
+			else if ( scores_loaded == 1
 				&& (playfabUser.leaderboardData.leaderboards[playfabUser.leaderboardData.currentSearch].loading == false
 					&& playfabUser.leaderboardData.leaderboards[playfabUser.leaderboardData.currentSearch].playerDataLoading == false) )
 			{
@@ -10221,7 +10223,7 @@ bind_failed:
 			if ( boardType == BoardType::LOCAL_SINGLE || boardType == BoardType::LOCAL_MULTI ) {
 				widget.setInvisible(true);
 			}
-			else 
+			else
 			{
 				widget.setInvisible(false);
 			}
@@ -10511,7 +10513,7 @@ bind_failed:
 					0, 0, y);
 			}
 		}
-		
+
 		genericSubwindowFinalizeBasic(*subwindow, y);
 	}
 
@@ -12374,7 +12376,7 @@ bind_failed:
 						const int chunk_size = loadingsavegame ?
 							6 + 32 + 6 * 10:	// 6 bytes for player stats, 32 for name, 60 for equipment
 							6 + 32;				// 6 bytes for player stats, 32 for name
-							
+
 						stats[c]->clearStats();
 						client_disconnected[c] = net_packet->data[8 + c * chunk_size + 0]; // connectedness
 						playerSlotsLocked[c] = net_packet->data[8 + c * chunk_size + 1]; // locked state
@@ -13104,25 +13106,25 @@ failed:
 				auto& survivalComplexity = classEntry.survivalComplexity.back();
 				switch ( value )
 				{
-					case 1: 
-						std::get<1>(survivalComplexity) = "*"; 
+					case 1:
+						std::get<1>(survivalComplexity) = "*";
 						std::get<2>(survivalComplexity) = (c == 0 ? bad : good);
 						break;
-					case 2: 
-						std::get<1>(survivalComplexity) = "**"; 
+					case 2:
+						std::get<1>(survivalComplexity) = "**";
 						std::get<2>(survivalComplexity) = (c == 0 ? poor : decent);
 						break;
-					case 3: 
-						std::get<1>(survivalComplexity) = "***"; 
+					case 3:
+						std::get<1>(survivalComplexity) = "***";
 						std::get<2>(survivalComplexity) = (c == 0 ? average : average);
 						break;
-					case 4: 
-						std::get<1>(survivalComplexity) = "****"; 
+					case 4:
+						std::get<1>(survivalComplexity) = "****";
 						std::get<2>(survivalComplexity) = (c == 0 ? decent : poor);
 						break;
-					case 5: 
-						std::get<1>(survivalComplexity) = "*****"; 
-						std::get<2>(survivalComplexity) = (c == 0 ? good : bad); 
+					case 5:
+						std::get<1>(survivalComplexity) = "*****";
+						std::get<2>(survivalComplexity) = (c == 0 ? good : bad);
 						break;
 					default:
 						break;
@@ -13163,9 +13165,9 @@ failed:
 		printlog("[JSON]: Successfully read json file %s", inputPath.c_str());
 	}
 
-	RaceDescriptions::DescData_t& RaceDescriptions::getMonsterDescriptionData(int type) 
-	{ 
-		return data[monstertypename[type]]; 
+	RaceDescriptions::DescData_t& RaceDescriptions::getMonsterDescriptionData(int type)
+	{
+		return data[monstertypename[type]];
 	}
 
 	void RaceDescriptions::readFromFile()
@@ -13228,7 +13230,7 @@ failed:
 				}
 			}
 			raceEntry.traitsBasedOnPlayerRace = "";
-			for ( auto it2 = it->value["traits_active_if_polymorphed_out_of"].Begin(); 
+			for ( auto it2 = it->value["traits_active_if_polymorphed_out_of"].Begin();
 				it2 != it->value["traits_active_if_polymorphed_out_of"].End(); )
 			{
 				raceEntry.traitsBasedOnPlayerRace += (textLeftLines[it2->GetInt()]);
@@ -13290,7 +13292,7 @@ failed:
 			{
 				raceEntry.linePaddings.push_back(it2->GetInt());
 			}
-			
+
 			int numweaknesses = 0;
 			int numresistances = 0;
 			for ( size_t index = minProLine; index < textLeftLines.size(); ++index )
@@ -13505,7 +13507,7 @@ failed:
 		}
 	}
 
-	void RaceDescriptions::update_details_text(Frame& card, void* stats) 
+	void RaceDescriptions::update_details_text(Frame& card, void* stats)
 	{
 		Monster race = HUMAN;
 		if ( static_cast<Stat*>(stats)->stat_appearance == 0 && static_cast<Stat*>(stats)->playerRace != RACE_HUMAN )
@@ -13809,8 +13811,8 @@ failed:
 					button.setPressed(false);
 					race_achievement_required_error(gameModeManager.currentSession.challengeRun.classnum);
 					return;
-				} 
-				else 
+				}
+				else
 				{
                     success = true;
                     if (stats[index]->playerRace != c) {
@@ -13898,7 +13900,7 @@ failed:
         }
 		stats[index]->clearStats();
 		initClass(index);
-        
+
         if (!override_dlc) {
             sendPlayerOverNet();
             saveLastCharacter(index, multiplayer);
@@ -14042,7 +14044,7 @@ failed:
 		if (card) {
 			card->removeSelf();
 		}
-        
+
         const int pos = (Frame::virtualScreenX / 8) * (index * 2 + 1);
 		card = lobby->addFrame((std::string("card") + std::to_string(index)).c_str());
 		card->setSize(SDL_Rect{pos - 324 / 2, Frame::virtualScreenY - height, 324, height});
@@ -14187,7 +14189,7 @@ failed:
 			if (c == 0) {
 				setting->select();
 			}
-            
+
             setting->setUserData((void*)(intptr_t)c);
 			setting->setDisabled(index != 0);
 			switch (c) {
@@ -14355,7 +14357,7 @@ failed:
 				else if ( Mods::disableSteamAchievements ) {
 					achievements->setColor(makeColor(180, 37, 37, 255));
 					achievements->setText(Language::get(5387));
-				} else if ( allSettings.cheats_enabled 
+				} else if ( allSettings.cheats_enabled
 					/*|| allSettings.extra_life_enabled*/ ) {
 					achievements->setColor(makeColor(180, 37, 37, 255));
 					achievements->setText(Language::get(5389));
@@ -14376,7 +14378,7 @@ failed:
 				} else if ( Mods::lobbyDisableSteamAchievements ) {
 					achievements->setColor(makeColor(180, 37, 37, 255));
 					achievements->setText(Language::get(5388));
-				} else if ( (lobbyWindowSvFlags & SV_FLAG_CHEATS) 
+				} else if ( (lobbyWindowSvFlags & SV_FLAG_CHEATS)
 					/*|| (lobbyWindowSvFlags & SV_FLAG_LIFESAVING)*/ ) {
 					achievements->setColor(makeColor(180, 37, 37, 255));
 					achievements->setText(Language::get(5389));
@@ -14444,7 +14446,7 @@ failed:
         if (!card) {
             return;
         }
-        
+
 		const std::string name = std::string("card") + std::to_string(index);
 
 		static void (*back_fn)(int) = [](int index){
@@ -14665,7 +14667,7 @@ failed:
 
 					auto choice2 = RNG.uniform(0, (int)suffixes.size() - 1);
 					auto suffix = suffixes[choice2].c_str();
-					
+
 					snprintf(buf, sizeof(buf), "%s %s", prefix, suffix);
 				}
 				seed_field_fn(buf, index);
@@ -14680,7 +14682,7 @@ failed:
 					soundError();
 					return;
 				}
-				soundActivate(); randomize_seed_fn(button, button.getOwner()); 
+				soundActivate(); randomize_seed_fn(button, button.getOwner());
 			});
 		}
 
@@ -15769,7 +15771,7 @@ failed:
 				race->setBackgroundHighlighted("");
 				race->setBackgroundActivated("");
 			}
-		    else 
+		    else
 			{
 				race->setBackground("*#images/ui/Main Menus/sublist_item-unpicked.png");
 				race->setBackgroundHighlighted("*#images/ui/Main Menus/sublist_item-unpickedHigh.png");
@@ -15822,7 +15824,7 @@ failed:
 		            auto hover = subframe->findImage("hover"); assert(hover);
 		            hover->pos.y = button->getSize().y;
 		            race_selection[widget.getOwner()] = (hover->pos.y - 2) / 36;
-                    
+
                     const int index = widget.getOwner();
                     if (inputs.hasController(index)) {
                         race_button_fn(*button, true);
@@ -15856,7 +15858,7 @@ failed:
 		    label->setHJustify(Field::justify_t::LEFT);
 		    label->setVJustify(Field::justify_t::CENTER);
 		}
-        
+
         static const char* appearance_names[] = {
             Language::get(5405),
             Language::get(5406),
@@ -16193,7 +16195,7 @@ failed:
 				button.setPressed(false);
 				return;
 			}
-			soundActivate(); 
+			soundActivate();
 			male_button_fn(button, button.getOwner());
 			});
 		male_button->addWidgetAction("MenuPageLeft", "male");
@@ -16251,7 +16253,7 @@ failed:
 				button.setPressed(false);
 				return;
 			}
-			soundActivate(); 
+			soundActivate();
 			female_button_fn(button, button.getOwner());
 			});
 		female_button->addWidgetAction("MenuPageLeft", "male");
@@ -16323,7 +16325,7 @@ failed:
 
 	static void characterCardClassMenu(int index, bool details, int selection) {
         static int class_selection[MAXPLAYERS];
-        
+
 		auto reduced_class_list = reducedClassList(index);
 		auto card = initCharacterCard(index, details? 664 : 446);
         if (!card) {
@@ -16337,7 +16339,7 @@ failed:
                 initClass(index);
             }
             createCharacterCard(index);
-            
+
             assert(main_menu_frame);
             auto lobby = main_menu_frame->findFrame("lobby"); assert(lobby);
             auto card = lobby->findFrame((std::string("card") + std::to_string(index)).c_str()); assert(card);
@@ -16414,7 +16416,7 @@ failed:
 
 						snprintf(buf, sizeof(buf), "stat img bottom %d", s);
 						auto class_stat_img_bottom = parent->findImage(buf);
-						if ( /*!class_stat_img_top ||*/ !class_stat_img_bottom ) 
+						if ( /*!class_stat_img_top ||*/ !class_stat_img_bottom )
 						{
 							return;
 						}
@@ -16423,7 +16425,7 @@ failed:
 							//class_stat_img_top->disabled = true;
 							class_stat_img_bottom->disabled = false;
 
-							class_stat_img_bottom->path = 
+							class_stat_img_bottom->path =
 								"*#images/ui/Main Menus/Play/PlayerCreation/ClassSelection/statgrowth_lo2.png";
 						}
 						else if ( ClassDescriptions::data[i].statRatingsStrings[s] == "poor" )
@@ -16550,8 +16552,8 @@ failed:
 					field.addColorToLine(c, std::get<2>(ClassDescriptions::data[i].survivalComplexity[c]));
 		        }
 		        char buf[star_buf_size];
-		        snprintf(buf, sizeof(buf), "%s\n%s", 
-					std::get<1>(ClassDescriptions::data[i].survivalComplexity[0]).c_str(), 
+		        snprintf(buf, sizeof(buf), "%s\n%s",
+					std::get<1>(ClassDescriptions::data[i].survivalComplexity[0]).c_str(),
 					std::get<1>(ClassDescriptions::data[i].survivalComplexity[1]).c_str());
 		        field.setText(buf);
 	        };
@@ -16671,7 +16673,7 @@ failed:
 				soundActivate();
 				});
 		}
-        
+
         auto randomize_class = card->addButton("randomize_class");
         randomize_class->setColor(makeColor(255, 255, 255, 255));
         randomize_class->setHighlightColor(makeColor(255, 255, 255, 255));
@@ -16850,7 +16852,7 @@ failed:
                 // set class
                 bool success = false;
                 if (c < num_classes) {
-					if ( gameModeManager.currentSession.challengeRun.isActive() 
+					if ( gameModeManager.currentSession.challengeRun.isActive()
 						&& gameModeManager.currentSession.challengeRun.classnum >= 0
 						&& gameModeManager.currentSession.challengeRun.classnum < NUMCLASSES
 						&& gameModeManager.currentSession.challengeRun.classnum != c )
@@ -16887,13 +16889,13 @@ failed:
 							client_classes[index] = c;
 						}
 					}
-                    
+
                     stats[index]->clearStats();
                     initClass(index);
                     sendPlayerOverNet();
                     saveLastCharacter(index, multiplayer);
                 }
-                
+
                 // if using a gamepad, back out to the previous menu
                 if (success) {
                     if (inputs.hasController(index)) {
@@ -16954,7 +16956,7 @@ failed:
 				const auto find = classes.find(name);
 				if (find != classes.end()) {
 					const auto& full_class = find->second;
-                    
+
                     // preview the class
                     if (button->isSelected() || button->isHighlighted() || client_classes[index] == class_index) {
                         if (inputs.hasController(index)) {
@@ -16968,7 +16970,7 @@ failed:
                             }
                         }
                     }
-                    
+
                     // set button icon
 					if (isCharacterValidFromDLC(*stats[index], class_index) == VALID_OK_CHARACTER) {
 						if (button->isSelected() || button->isHighlighted() || client_classes[index] == class_index) {
@@ -17040,7 +17042,7 @@ failed:
 		if (countdown) {
 		    countdown->removeSelf();
 		}
-        
+
         // make SURE this player is valid when the character card opens
         if (isCharacterValidFromDLC(*stats[index], client_classes[index]) != VALID_OK_CHARACTER) {
             stats[index]->playerRace = RACE_HUMAN;
@@ -17080,7 +17082,7 @@ failed:
             stats[index]->clearStats();
             initClass(index);
         }
-        
+
         sendReadyOverNet(index, false);
         sendPlayerOverNet();
 		saveLastCharacter(index, multiplayer);
@@ -17117,7 +17119,7 @@ failed:
 			"*images/ui/Main Menus/Play/PlayerCreation/Finalize__NameField_00.png",
 			"name_box"
 		);
-  
+
         char guidebuf[256];
         snprintf(guidebuf, sizeof(guidebuf), Language::get(5434), index + 1);
 
@@ -17230,7 +17232,7 @@ failed:
 #endif
 		};
 		randomize_name->setCallback([](Button& button){soundActivate(); randomize_name_fn(button, button.getOwner());});
-		
+
 		auto game_settings = card->addButton("game_settings");
 		game_settings->setSize(SDL_Rect{62, 76, 202, 52});
 		game_settings->setColor(makeColor(255, 255, 255, 255));
@@ -17288,7 +17290,7 @@ failed:
 				button.setPressed(false);
 				return;
 			}
-			soundActivate(); 
+			soundActivate();
 			male_button_fn(button, button.getOwner());
 		});
 		male_button->setTickCallback([](Widget& widget){
@@ -17342,7 +17344,7 @@ failed:
 				button.setPressed(false);
 				return;
 			}
-			soundActivate(); 
+			soundActivate();
 			female_button_fn(button, button.getOwner());
 			});
 		female_button->setTickCallback([](Widget& widget){
@@ -17778,7 +17780,7 @@ failed:
 			"*images/ui/Main Menus/Play/PlayerCreation/UI_Invite_Window00.png",
 			"backdrop"
 		);
-  
+
         char playerbuf[64];
         snprintf(playerbuf, sizeof(playerbuf), Language::get(5443), index + 1);
 
@@ -17806,7 +17808,7 @@ failed:
 		start->setWidgetBack("back_button");
 		start->setTickCallback([](Widget& widget){
 		    const int player = widget.getOwner();
-			
+
 			assert(main_menu_frame);
 			if (!main_menu_frame->findSelectedWidget(widget.getOwner())) {
 				widget.select();
@@ -18351,7 +18353,7 @@ failed:
 		    if (ready) {
 		        button->setCallback([](Button& button){cancel_fn(button.getOwner());});
 		    } else {
-		        button->setCallback([](Button& button){ready_fn(button.getOwner());}); 
+		        button->setCallback([](Button& button){ready_fn(button.getOwner());});
 		    }
 			button->setTickCallback([](Widget& widget){
 				// rescue focus
@@ -18502,7 +18504,7 @@ failed:
 		        }
 		    }
 		    });
-		
+
 		/*auto achievements = frame->addField("achievements", 256);
 		achievements->setSize(SDL_Rect{0, frame->getSize().h - 32, frame->getSize().w, 32});
 		achievements->setFont(smallfont_outline);
@@ -18681,7 +18683,7 @@ failed:
         const int lobbySize = type == LobbyType::LobbyLocal ?
             (Frame::virtualScreenX / 4) * MAX_SPLITSCREEN:
             (Frame::virtualScreenX / 4) * MAXPLAYERS;
-        
+
 		auto lobby = main_menu_frame->addFrame("lobby");
 		lobby->setOwner(clientnum);
 		lobby->setSize(SDL_Rect{0, 0, Frame::virtualScreenX, Frame::virtualScreenY});
@@ -18689,9 +18691,9 @@ failed:
         lobby->setColor(makeColor(0, 0, 0, 127));
         lobby->setAllowScrollBinds(false);
 		lobby->setBorder(0);
-        
+
         static ConsoleVariable<float> cvar_lobbyScroll("/lobby_scroll", 10.f);
-        
+
         auto scrollRight = lobby->addButton("scroll_right");
         scrollRight->setBackground("*#images/ui/Main Menus/Settings/Settings_Button_R00.png");
         scrollRight->setBackgroundActivated("*#images/ui/Main Menus/Settings/Settings_Button_RPress00.png");
@@ -18712,7 +18714,7 @@ failed:
             auto speed = *cvar_lobbyScroll * Frame::virtualScreenX;
             frame->setAccelerationX(speed);
             });
-        
+
         auto scrollLeft = lobby->addButton("scroll_left");
         scrollLeft->setBackground("*#images/ui/Main Menus/Settings/Settings_Button_L00.png");
         scrollLeft->setBackgroundActivated("*#images/ui/Main Menus/Settings/Settings_Button_LPress00.png");
@@ -19332,13 +19334,13 @@ failed:
 		        field->setGlyphPosition(Widget::glyph_position_t::CENTERED_RIGHT);
 		        field->setSelectorOffset(SDL_Rect{-7, -7, 7, 7});
 		        field->setButtonsOffset(SDL_Rect{8, 0, 0, 0});
-                
+
 #ifndef NINTENDO
                 if (type == LobbyType::LobbyOnline) {
                     field->setEditable(true);
                 }
 #endif
-                
+
 		        field->setScroll(true);
 		        field->setGuide(Language::get(5457));
 		        field->setSize(SDL_Rect{162, 14, 242, 28});
@@ -19531,7 +19533,7 @@ failed:
                 } else {
                     roomcode_header->setText(Language::get(5465));
                 }
-                
+
 			    auto roomcode = banner->addField("roomcode", 128);
 			    roomcode->setHJustify(Field::justify_t::RIGHT);
 			    roomcode->setVJustify(Field::justify_t::CENTER);
@@ -19697,7 +19699,7 @@ failed:
 		}
 
 		// network ping displays
-		if ( PingNetworkStatus_t::bEnabled 
+		if ( PingNetworkStatus_t::bEnabled
 				&& (type == LobbyType::LobbyLAN || type == LobbyType::LobbyOnline
 					|| type == LobbyType::LobbyJoined) )
 		{
@@ -20070,7 +20072,7 @@ failed:
 	        // probably the result of an out-of-date network scan
 	        return;
 	    }
-        
+
         if (info.players <= 0) {
             // do not include empty lobbies
             return;
@@ -20128,7 +20130,7 @@ failed:
 						std::string prefix = Language::get(6110);
 						for ( auto& c : prefix )
 						{
-							if ( c == '\n' ) 
+							if ( c == '\n' )
 							{
 								c = ' ';
 							}
@@ -20349,7 +20351,7 @@ failed:
                 printlog("skipping lobby '%s' (has friends)\n", info.name.c_str());
                 return;
             }
-            if (lobbyFilters[2] == Filter::ON 
+            if (lobbyFilters[2] == Filter::ON
 				&& ( (info.flags & (SV_FLAG_CHEATS /*| SV_FLAG_LIFESAVING*/) )
 						|| info.modsDisableAchievements)
 				) {
@@ -20358,8 +20360,8 @@ failed:
                 printlog("skipping lobby '%s' (achievements disabled)\n", info.name.c_str());
                 return;
             }
-            if (lobbyFilters[2] == Filter::OFF 
-				&& !( (info.flags & (SV_FLAG_CHEATS /*| SV_FLAG_LIFESAVING*/) ) 
+            if (lobbyFilters[2] == Filter::OFF
+				&& !( (info.flags & (SV_FLAG_CHEATS /*| SV_FLAG_LIFESAVING*/) )
 						|| info.modsDisableAchievements )
 				) {
                 // we're only looking for lobbies where achievements aren't enabled
@@ -20414,7 +20416,7 @@ failed:
 	        players->setSelection(selection);
 			versions->setSelection(selection);
 			//pings->setSelection(selection);
-            
+
             auto mouse = inputs.getVirtualMouse(entry.parent.getOwner());
             if (mouse && !mouse->draw_cursor) {
                 auto lobbyId = (intptr_t)entry.data;
@@ -20658,7 +20660,7 @@ failed:
 #endif
                 // lobby list has returned
                 closePrompt("lobby_list_request");
-				
+
 				// select names list
 				assert(main_menu_frame);
 				auto lobby_browser_window = main_menu_frame->findFrame("lobby_browser_window"); assert(lobby_browser_window);
@@ -20715,7 +20717,7 @@ failed:
 
                 // lobby list has returned
                 closePrompt("lobby_list_request");
-				
+
 				// select names list
 				assert(main_menu_frame);
 				auto lobby_browser_window = main_menu_frame->findFrame("lobby_browser_window"); assert(lobby_browser_window);
@@ -20872,7 +20874,7 @@ failed:
 #endif
 
         closeNetworkInterfaces();
-        
+
 #ifndef NINTENDO
         // open a socket for network scanning
         scan.close();
@@ -21060,7 +21062,7 @@ failed:
 			    "*images/ui/Main Menus/Play/LobbyBrowser/Lobby_Window_Filters00.png",
 			    "background"
 		    );
-            
+
             createGenericWindowDecorations(*frame_right);
             sizeWindowDecorations(*frame_right, SDL_Rect{24, 72, 256, 312});
 
@@ -21149,7 +21151,7 @@ failed:
                         addLobby(lobby);
                     }
 
-					if ( Frame* parent = static_cast<Frame*>(button.getParent()) ) 
+					if ( Frame* parent = static_cast<Frame*>(button.getParent()) )
 					{
 						if ( Frame* parent2 = parent->getParent() )
 						{
@@ -21232,18 +21234,18 @@ failed:
                 if (!foundFlags) {
                     flags1.append(Language::get(5509));
                 }
-                
+
                 auto frame = static_cast<Frame*>(&widget); assert(frame);
 
 		        char buf[1024];
-                
+
                 auto values1 = frame->findField("values1"); assert(values1);
                 const char* values1_fmt = "\n%s (%s)";
                 snprintf(buf, sizeof(buf), values1_fmt, lobby.name.c_str(), lobby.version.c_str());
                 values1->setText(buf);
                 values1->reflowTextToFit(0);
                 const int numLines = values1->getNumTextLines();
-                
+
                 std::string header_txt = Language::get(5510); // Name:
                 std::string values2_txt;
                 for (int c = 0; c <= numLines; ++c) {
@@ -21252,14 +21254,14 @@ failed:
                 }
                 header_txt += Language::get(5511); // Flags:
                 values2_txt += "\n%s";
-                
+
                 auto headers = frame->findField("headers"); assert(headers);
                 headers->setText(header_txt.c_str());
-                
+
                 auto values2 = frame->findField("values2"); assert(values2);
                 snprintf(buf, sizeof(buf), values2_txt.c_str(), flags1.c_str());
                 values2->setText(buf);
-                
+
                 auto values3 = frame->findField("values3"); assert(values3);
                 snprintf(buf, sizeof(buf), values2_txt.c_str(), flags2.c_str());
                 values3->setText(buf);
@@ -21274,7 +21276,7 @@ failed:
 			    "*images/ui/Main Menus/Play/LobbyBrowser/Lobby_Window_Left00.png",
 			    "background"
 		    );
-            
+
             createGenericWindowDecorations(*frame_left);
             sizeWindowDecorations(*frame_left, SDL_Rect{24, 72, 256, 312});
 
@@ -21297,14 +21299,14 @@ failed:
 		    values1->setSize(SDL_Rect{30, 76, 244, 320});
 		    values1->setFont(smallfont_outline);
 		    values1->setColor(makeColor(183, 155, 119, 255));
-            
+
             auto values2 = frame_left->addField("values2", 1024);
             values2->setHJustify(Field::justify_t::LEFT);
             values2->setVJustify(Field::justify_t::TOP);
             values2->setSize(SDL_Rect{30, 76, 122, 320});
             values2->setFont(smallfont_outline);
             values2->setColor(makeColor(183, 155, 119, 255));
-            
+
             auto values3 = frame_left->addField("values3", 1024);
             values3->setHJustify(Field::justify_t::LEFT);
             values3->setVJustify(Field::justify_t::TOP);
@@ -23534,7 +23536,7 @@ failed:
 		{
 			snprintf(window_text, sizeof(window_text), Language::get(6099), shortened_name, validCharacter);
 			monoPromptXL(
-				window_text, Language::get(5591), 
+				window_text, Language::get(5591),
 				[](Button& button) { // Cancel button
 					soundCancel();
 				if ( savegame_selected ) {
@@ -23674,13 +23676,13 @@ failed:
 				false, false); // both buttons are yellow
 		}
 	}
-                  
+
     static void addContinuePlayerInfo(Frame& frame, SaveGameInfo& info, int player, int x, int y, bool show_pnum) {
         auto subframe = frame.addFrame("info");
         subframe->setSize(SDL_Rect{x, y, 64, 64});
         subframe->setHollow(true);
         subframe->setColor(0);
-        
+
         // player num + level text
         char buf[16];
         auto lvl = subframe->addField("player_lvl", sizeof(buf));
@@ -23699,7 +23701,7 @@ failed:
         lvl->setColor(0xffffffff);
         lvl->setFont(smallfont_outline);
         lvl->setText(buf);
-        
+
         // class image
         const int num_classes = sizeof(classes_in_order) / sizeof(classes_in_order[0]);
         const int class_index = (info.players[player].char_class) % num_classes;
@@ -23714,7 +23716,7 @@ failed:
                 class_img_path.c_str(),
                 "class_img");
         }
-        
+
         // portrait
         const std::string portrait_path =
             monsterData.getAllyIconFromSprite(playerHeadSprite(
@@ -23727,7 +23729,7 @@ failed:
             portrait_path.c_str(),
             "portrait");
     }
-                
+
 	static Button* populateContinueSubwindow(Frame& subwindow, bool singleplayer) {
 	    static Uint32 timeSinceScroll = 0;
 		subwindow.setActualSize(SDL_Rect{0, 0, 898, 294});
@@ -23943,7 +23945,7 @@ failed:
 		            screenshot->section.x = (image->getWidth() - image->getHeight()) / 2;
 		            screenshot->section.w = image->getHeight();
 		        }*/
-                    
+
                 auto cover = subwindow.addFrame("bookcover");
                 cover->setSize(SDL_Rect{posX, 0, 220, 280});
                 cover->setColor(0);
@@ -24020,7 +24022,7 @@ failed:
 				Image* image = Image::get(screenshot_path.c_str()); assert(image);
 				screenshot->section.x = (image->getWidth() - image->getHeight()) / 2;
 				screenshot->section.w = image->getHeight();
-    
+
 				if ( challengeEventSave )
 				{
 					savegame_book->setBackground("*images/ui/Main Menus/ContinueGame/UI_Cont_SaveFile_Book_02.png");
@@ -24106,7 +24108,7 @@ failed:
 						}
 					}
 				}
-                    
+
                 // add player info
                 if (numplayers == 1) {
                     addContinuePlayerInfo(subwindow, saveGameInfo, saveGameInfo.player_num, posX + 30, 114, false);
@@ -25018,7 +25020,7 @@ failed:
 					return;
 				}
 			}
-			
+
 
 			auto prompt = binaryPrompt(Language::get(5627),
                 Language::get(5628), Language::get(5629),
@@ -25676,22 +25678,22 @@ failed:
 				auto classicEnding = [](){(void)beginFade(FadeDestination::Victory);};
 				auto fullEnding = [](){(void)beginFade(FadeDestination::Victory); steamAchievement("BARONY_ACH_ALWAYS_WAITING");};
 				auto loadNextLevel = [](){
-					if (multiplayer != CLIENT) 
+					if (multiplayer != CLIENT)
 					{
-						loadnextlevel = true; 
+						loadnextlevel = true;
 						Compendium_t::Events_t::previousCurrentLevel = currentlevel;
 						Compendium_t::Events_t::previousSecretlevel = secretlevel;
-						skipLevelsOnLoad = 0; 
+						skipLevelsOnLoad = 0;
 						pauseGame(1, false);
 					}
 				};
 				auto skipHellLevels = [](){
-					if (multiplayer != CLIENT) 
+					if (multiplayer != CLIENT)
 					{
-						loadnextlevel = true; 
+						loadnextlevel = true;
 						Compendium_t::Events_t::previousCurrentLevel = currentlevel;
 						Compendium_t::Events_t::previousSecretlevel = secretlevel;
-						skipLevelsOnLoad = 5; 
+						skipLevelsOnLoad = 5;
 						pauseGame(1, false);
 					}
 				};
@@ -25848,7 +25850,7 @@ failed:
         if (video_refresh) {
 			Frame::guiResize(0, 0); // resize gui for new aspect ratio
             createMainMenu(!intro);
-            
+
 #if defined(VIDEO_RESTART_NEEDED)
             // return to settings button
             assert(main_menu_frame);
@@ -26330,7 +26332,7 @@ failed:
 	}
 
 	void createMainMenu(bool ingame) {
-		if (!ingame) { 
+		if (!ingame) {
 			clientnum = 0;
 			inputs.setPlayerIDAllowedKeyboard(clientnum);
 		}
@@ -26397,7 +26399,7 @@ failed:
 					SDL_Rect{x, y, w, h},
 					makeColor(255, 255, 255, 255),
 					path, name.c_str());
-     
+
                 char fmt[16];
                 snprintf(fmt, sizeof(fmt), Language::get(5477), player + 1);
 
@@ -26655,7 +26657,7 @@ failed:
 					achievements->setColor(makeColor(180, 37, 37, 255));
 					achievements->setText(Language::get(5784));
 				}
-				else 
+				else
 				{
 					achievements->setColor(makeColor(37, 90, 255, 255));
 					achievements->setText(""); // Language::get(5785) "ACHIEVEMENTS ENABLED"
@@ -26717,12 +26719,12 @@ failed:
                 notification = main_menu_frame->addFrame("notification");
                 notification->setSize(SDL_Rect{(Frame::virtualScreenX - 472) / 2, note_y, 472, 76});
                 notification->setActualSize(SDL_Rect{0, 0, notification->getSize().w, notification->getSize().h});
-                
+
                 auto banner_fn = [](Button& button){
                     mainSettings(button);
                     settingsOnlinePopulate(button, true);
                 };
-                
+
 				auto banner = notification->addButton("holiday_banner");
 				banner->setBackground(holiday_banner_images[0]);
 				banner->setBackgroundHighlighted(holiday_banner_images[1]);
@@ -26739,7 +26741,7 @@ failed:
                 banner->setWidgetUp("Quit");
 #endif
             }
-        
+
 #ifdef NINTENDO
 		    const char* banner_images[][2] = {
 		        {
@@ -26747,7 +26749,7 @@ failed:
 		            "*#images/ui/Main Menus/Banners/UI_MainMenu_QoDPatchNotes1_high.png",
 		        },
 		    };
-            
+
             // customize DLC banner.
             {
                 if (!enabledDLCPack1 && !enabledDLCPack2) {
@@ -26763,13 +26765,13 @@ failed:
                     banner_images[0][1] = "*#images/ui/Main Menus/Banners/UI_MainMenu_LnPBanner1_high.png";
                 }
             }
-                
+
 		    void(*banner_funcs[])(Button&) = {
 		        [](Button&){
                     openDLCPrompt(enabledDLCPack1 ? 1 : 0);
 		        }
 		    };
-            
+
 			const int num_banners = (enabledDLCPack1 && enabledDLCPack2) ?
                 0 : 1;
 #else
@@ -26791,7 +26793,7 @@ failed:
 				banner_images[0][0] = MainMenuBanners_t::updateBannerImg.c_str();
 				banner_images[0][1] = MainMenuBanners_t::updateBannerImgHighlight.c_str();
 			}
-   
+
             // customize DLC banner.
             {
                 if (!enabledDLCPack1 && !enabledDLCPack2) {
@@ -26807,7 +26809,7 @@ failed:
                     banner_images[1][1] = "*#images/ui/Main Menus/Banners/UI_MainMenu_LnPBanner1_high.png";
                 }
             }
-            
+
 			void(*banner_funcs[])(Button&) = {
 				[](Button&) { // banner #1
 					openURLTryWithOverlay(MainMenuBanners_t::updateBannerURL.c_str());
@@ -26816,7 +26818,7 @@ failed:
 					 openDLCPrompt(enabledDLCPack1 ? 1 : 0);
 				},
 			};
-            
+
 		    const int num_banners = (enabledDLCPack1 && enabledDLCPack2) ? 1 : sizeof(banner_funcs) / sizeof(banner_funcs[0]);
 #endif
 		    auto banners = main_menu_frame->addFrame("banners");
@@ -27000,11 +27002,11 @@ failed:
 			if ( saveGameExists(multiplayer == SINGLE) && gameModeManager.allowsSaves() ) {
 				doEndgame(false, true);
 			}
-			else 
+			else
 			{
 				doEndgame(true, true);
 			}
-			
+
 	        multiplayer = SINGLE;
 		    disconnectFromLobby();
 	        destroyMainMenu();
@@ -27785,7 +27787,7 @@ failed:
                     SDL_Rect{x, y, w, h},
                     makeColor(255, 255, 255, 255),
                     path, name.c_str());
-                    
+
                 char fmt[16];
                 snprintf(fmt, sizeof(fmt), Language::get(5477), c + 1);
 
@@ -27862,24 +27864,24 @@ failed:
 		[](int argc, const char** argv) {
 			crossplayPrompt();
 		});
-                
+
     /******************************************************************************/
-    
+
     static std::string username;
     static std::string hostname;
-    
+
     const char* getUsername() {
         return username.c_str();
     }
-    
+
     const char* getHostname() {
         return hostname.c_str();
     }
-    
+
     void setUsername(const char* name) {
         username = name;
     }
-    
+
     void setHostname(const char* name) {
         hostname = name;
     }
@@ -28245,8 +28247,8 @@ failed:
 		}
 	}
 
-	static auto make_workshop_frame = [](Frame& subwindow, int y, 
-		const char* name, const char* titleTxt, const char* descTxt, 
+	static auto make_workshop_frame = [](Frame& subwindow, int y,
+		const char* name, const char* titleTxt, const char* descTxt,
 		bool isMounted, bool isWorkshopMod, int itemIndex, const char* tags) {
 		auto frame = subwindow.addFrame(name);
 		frame->setSize(SDL_Rect{ 16, y, 884, 0 });
@@ -28763,7 +28765,7 @@ failed:
 								}
 							}
 
-							prevFrame = make_workshop_frame(*subwindow, prevFrame ? prevFrame->getSize().y + frameHeight : 24, name, 
+							prevFrame = make_workshop_frame(*subwindow, prevFrame ? prevFrame->getSize().y + frameHeight : 24, name,
 								g_SteamWorkshop->m_subscribedItemListDetails[i].m_rgchTitle,
 								g_SteamWorkshop->m_subscribedItemListDetails[i].m_rgchDescription,
 								pathIsMounted, true, i,
@@ -30022,12 +30024,12 @@ failed:
 					button->setWidgetPageLeft("tab_left");
 					button->setWidgetLeft(mod_tabs[c].name);
 				}
-				if ( c < num_tabs - 1 ) 
+				if ( c < num_tabs - 1 )
 				{
 					button->setWidgetPageRight("tab_right");
 					button->setWidgetRight(mod_tabs[c + 1].name);
 				}
-				else 
+				else
 				{
 					button->setWidgetPageRight("tab_right");
 					button->setWidgetRight(mod_tabs[c].name);
@@ -30189,12 +30191,12 @@ failed:
 #endif
 			};
 
-			for ( auto& tab : mod_tabs ) 
+			for ( auto& tab : mod_tabs )
 			{
 				auto button = window->findButton(tab.name);
-				if ( button ) 
+				if ( button )
 				{
-					if ( tab.name == mods_active_tab ) 
+					if ( tab.name == mods_active_tab )
 					{
 						if ( rescueFocus )
 						{
@@ -30538,9 +30540,9 @@ failed:
                     return;
                 }
 				soundActivate();
-				
+
 				nfdchar_t* outPath = NULL;
-				
+
 				char path[PATH_MAX];
 				nfdresult_t result = NFD_OKAY;
 
@@ -30691,7 +30693,7 @@ failed:
 			button->setBackgroundActivated("*#images/ui/Main Menus/Mods/Upload/Button_Press00.png");
 			button->setHighlightColor(0xFFFFFFFF);
 			button->setColor(0xFFFFFFFF);
-			
+
 			button->setWidgetSearchParent("workshop_create");
 			button->setWidgetUp("folder button");
 			button->setWidgetDown("desc button");
@@ -30705,7 +30707,7 @@ failed:
 			if ( !details )
 			{
 				button->setCallback([](Button& button) {
-					workshopEditPrompt(Language::get(5908), 
+					workshopEditPrompt(Language::get(5908),
 					Language::get(5909), Language::get(5910), Language::get(5911),
 						[](Button& button) {
 							soundActivate();
@@ -30820,7 +30822,7 @@ failed:
 			button->setBackgroundActivated("*#images/ui/Main Menus/Mods/Upload/Button_Press00.png");
 			button->setHighlightColor(0xFFFFFFFF);
 			button->setColor(0xFFFFFFFF);
-			
+
 			button->setWidgetSearchParent("workshop_create");
 			button->setWidgetUp("title button");
 			if ( Mods::tag_settings.size() > 0 )
@@ -31388,7 +31390,7 @@ failed:
 						Mods::uploadTicks = 0;
 						Mods::uploadStatus = UploadStatus::STATUS_UPLOAD_CONTENT_START;
 						bool res = false;
-						
+
 						std::string fullpath = Mods::getFolderFullPath(modFolderPathToUpload);
 
 						if ( access(fullpath.c_str(), F_OK) == 0 )
@@ -32049,7 +32051,7 @@ failed:
 				soundCancel();
 				closeMono();
 				assert(main_menu_frame);
-				
+
 				auto challenge_window = main_menu_frame->findFrame("challenge_window"); assert(challenge_window);
 				auto challenge_btn = challenge_window->findButton(lid.c_str());
 				assert(challenge_btn);
@@ -32103,7 +32105,7 @@ failed:
 						break;
 					}
 				}
-				
+
 				if ( frame->getTicks() > TICKS_PER_SECOND * 15
 					|| !playfabUser.bLoggedIn
 					|| throwError
@@ -32229,7 +32231,7 @@ failed:
 			std::string prompt = Language::get(6113);
 			if ( playfabUser.bLoggedIn && !playfabUser.periodicalEvents.error )
 			{
-				if ( !playfabUser.periodicalEvents.awaitingData 
+				if ( !playfabUser.periodicalEvents.awaitingData
 					&& playfabUser.periodicalEvents.periodicalEvents.size() == 0 )
 				{
 					playfabUser.periodicalEvents.getPeriodicalEvents();
@@ -32246,7 +32248,7 @@ failed:
 				{
 					prompt = "Fetching data";
 				}
-				else if ( !playfabUser.periodicalEvents.awaitingData 
+				else if ( !playfabUser.periodicalEvents.awaitingData
 					&& playfabUser.periodicalEvents.periodicalEvents.size() == 3 )
 				{
 					// success
@@ -32439,7 +32441,7 @@ failed:
 						}
 					}
 				}
-				
+
 				frame->setDisabled(false);
 				if ( eventIndex == -1 )
 				{
@@ -32670,8 +32672,8 @@ failed:
 			gamemode_header->setFont(smallfont_outline);
 			gamemode_header->setHJustify(Field::justify_t::CENTER);
 			gamemode_header->setVJustify(Field::justify_t::TOP);
-			gamemode_header->setSize(SDL_Rect{ details_race_header->getSize().x, 
-				details_class->getSize().y + 8 + 20, 
+			gamemode_header->setSize(SDL_Rect{ details_race_header->getSize().x,
+				details_class->getSize().y + 8 + 20,
 				details_class_header->getSize().x + details_class_header->getSize().w - details_race_header->getSize().x, 28});
 
 			auto gamemode = details_panel->addField("gamemode", 64);
@@ -32685,7 +32687,7 @@ failed:
 			SDL_Rect rulesPos{ 0, 194 + 0, 304, 266 };
 			rules_frame->setSize(rulesPos);
 
-			auto rules_bg = rules_frame->addImage(SDL_Rect{ 0, 0, 304, 266 }, 
+			auto rules_bg = rules_frame->addImage(SDL_Rect{ 0, 0, 304, 266 },
 				0xFFFFFFFF,
 				"*images/ui/Main Menus/Challenges/seed_rules-panel00.png",
 				"rules_img");
@@ -32704,7 +32706,7 @@ failed:
 			ruleset->setFont(smallfont_outline);
 			ruleset->setHJustify(Field::justify_t::LEFT);
 			ruleset->setVJustify(Field::justify_t::TOP);
-			ruleset->setSize(SDL_Rect{ ruleset_header->getSize().x, ruleset_header->getSize().y + 20 + 7, 228, 
+			ruleset->setSize(SDL_Rect{ ruleset_header->getSize().x, ruleset_header->getSize().y + 20 + 7, 228,
 				rules_frame->getSize().h - (ruleset_header->getSize().y + 20)});
 		}
 
@@ -33246,10 +33248,10 @@ failed:
 					Button* button = static_cast<Button*>(&widget);
 					Frame* parent = static_cast<Frame*>(widget.getParent());
 					auto leaderboard_btn = parent->findButton(button->getWidgetMovements().at("MenuRight").c_str());
-					if ( leaderboard_btn ) 
-					{ 
-						leaderboard_btn->setDisabled(e.locked); 
-						leaderboard_btn->setInvisible(e.locked); 
+					if ( leaderboard_btn )
+					{
+						leaderboard_btn->setDisabled(e.locked);
+						leaderboard_btn->setInvisible(e.locked);
 						std::string imgPath = leaderboard_btn->getName();
 						imgPath += "_img";
 						if ( auto leaderboard_img = parent->findImage(imgPath.c_str()) )
@@ -33959,15 +33961,15 @@ failed:
 					|| monsterType == SHADOW
 					|| monsterType == MIMIC
 					|| monsterType == BAT_SMALL
-					|| monsterType == SPELLBOT 
-					|| monsterType == SENTRYBOT 
-					|| monsterType == GYROBOT 
+					|| monsterType == SPELLBOT
+					|| monsterType == SENTRYBOT
+					|| monsterType == GYROBOT
 					|| monsterType == DUMMYBOT )
 				{
 					recruitable = false;
 				}
 				else if ( monsterType == Compendium_t::Events_t::monsterUniqueIDLookup["bram kindly"]
-					|| monsterType == Compendium_t::Events_t::monsterUniqueIDLookup["artemisia"] 
+					|| monsterType == Compendium_t::Events_t::monsterUniqueIDLookup["artemisia"]
 					|| monsterType == Compendium_t::Events_t::monsterUniqueIDLookup["baratheon"] )
 				{
 					recruitable = false;
@@ -34273,7 +34275,7 @@ failed:
 								itemname = compendium_contents_current[compendium_current];
 							}
 						}
-						else if ( entryType >= Compendium_t::Events_t::kEventMonsterOffset 
+						else if ( entryType >= Compendium_t::Events_t::kEventMonsterOffset
 							&& entryType < Compendium_t::Events_t::kEventMonsterOffset + 1000 )
 						{
 							if ( Compendium_t::Events_t::eventLangEntries[tag].find(entryName)
@@ -34282,7 +34284,7 @@ failed:
 								itemname = entryName;
 							}
 						}
-						else if ( entryType >= Compendium_t::Events_t::kEventWorldOffset 
+						else if ( entryType >= Compendium_t::Events_t::kEventWorldOffset
 							&& entryType < Compendium_t::Events_t::kEventWorldOffset + 1000 )
 						{
 							if ( Compendium_t::Events_t::eventLangEntries[tag].find(entryName)
@@ -34425,7 +34427,7 @@ failed:
 						}
 						else if ( customTagKey != "" )
 						{
-							auto results = Compendium_t::Events_t::getCustomEventValue(customTagKey, compendium_current, 
+							auto results = Compendium_t::Events_t::getCustomEventValue(customTagKey, compendium_current,
 								compendium_contents_current[compendium_current], specificClass);
 							if ( customTagKey == "CUSTOM_CLASS_GAMES_WON" )
 							{
@@ -34514,7 +34516,7 @@ failed:
 								{
 									compendiumRecordsSectionLoadedValues[index].push_back(pair.first);
 								}
-								val->setText(compendiumRecordsSectionLoadedValues[index][compendiumRecordsSectionRandSequence 
+								val->setText(compendiumRecordsSectionLoadedValues[index][compendiumRecordsSectionRandSequence
 									% compendiumRecordsSectionLoadedValues[index].size()].c_str());
 							}
 						}
@@ -34729,7 +34731,7 @@ failed:
 									// no matching record
 									val->setText("-");
 								}
-								else if ( findEvent != Compendium_t::Events_t::events.end() 
+								else if ( findEvent != Compendium_t::Events_t::events.end()
 									&& findEvent->second.attributes.find("stats") != findEvent->second.attributes.end() )
 								{
 									if ( !strcmp(entryName, "str") )
@@ -35576,7 +35578,7 @@ failed:
 																bool selectable = !(itemName && !strcmp(itemName->getText(), "???"));
 																if ( !selectable && leftright )
 																{
-																	continue; // skip over 
+																	continue; // skip over
 																}
 																if ( !itemName )
 																{
@@ -35601,7 +35603,7 @@ failed:
 														soundError();
 													}
 												}
-												else if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuUp") 
+												else if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuUp")
 													|| Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuLeft") )
 												{
 													bool leftright = Input::inputs[getMenuOwner()].binary("MenuLeft");
@@ -35624,7 +35626,7 @@ failed:
 																bool selectable = !(itemName && !strcmp(itemName->getText(), "???"));
 																if ( !selectable && leftright )
 																{
-																	continue; // skip over 
+																	continue; // skip over
 																}
 																if ( !itemName )
 																{
@@ -35730,7 +35732,7 @@ failed:
 											if ( hovered && selectable )
 											{
 												//frame->select();
-												const int itemType = strstr(widget.getName(), "spell_") ? SPELL_ITEM 
+												const int itemType = strstr(widget.getName(), "spell_") ? SPELL_ITEM
 													: ItemTooltips.itemNameStringToItemID[widget.getName()];
 												if ( itemType >= WOODEN_SHIELD && itemType < NUMITEMS )
 												{
@@ -35901,11 +35903,11 @@ failed:
 					auto itemDetail = entry->addField("item detail", 128);
 					itemDetail->setFont(smallfont_outline);
 					itemDetail->setSize(itemName->getSize());
-					auto& unlockStatus = Compendium_t::CompendiumItems_t::itemUnlocks[id == SPELL_ITEM 
-						? data.spellID + Compendium_t::Events_t::kEventSpellOffset : 
+					auto& unlockStatus = Compendium_t::CompendiumItems_t::itemUnlocks[id == SPELL_ITEM
+						? data.spellID + Compendium_t::Events_t::kEventSpellOffset :
 							data.itemID];
 
-					if ( unlockStatus == Compendium_t::CompendiumUnlockStatus::LOCKED_UNKNOWN 
+					if ( unlockStatus == Compendium_t::CompendiumUnlockStatus::LOCKED_UNKNOWN
 #if !defined(NDEBUG)
 						&& !*cvar_compendium_reveal
 #endif
@@ -35922,7 +35924,7 @@ failed:
 							if ( auto s = getSpellFromID(data.spellID) )
 							{
 								char buf[128];
-								snprintf(buf, sizeof(buf), Language::get(6172), 
+								snprintf(buf, sizeof(buf), Language::get(6172),
 									s->difficulty, ItemTooltips.getProficiencyLevelName(spell->difficulty).c_str());
 								itemDetail->setText(buf);
 							}
@@ -36217,7 +36219,7 @@ failed:
 											}
 											else if ( frame->isSelected() )
 											{
-												if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuDown") 
+												if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuDown")
 													|| Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuRight") )
 												{
 													bool foundSelection = false;
@@ -36255,7 +36257,7 @@ failed:
 														soundError();
 													}
 												}
-												else if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuUp") 
+												else if ( Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuUp")
 													|| Input::inputs[getMenuOwner()].consumeBinaryToggle("MenuLeft") )
 												{
 													bool foundSelection = false;
@@ -36820,14 +36822,14 @@ failed:
 					if ( Compendium_t::Events_t::monsterUniqueIDLookup.find(entry.unique_npc)
 						!= Compendium_t::Events_t::monsterUniqueIDLookup.end() )
 					{
-						populateRecordsSectionItems(page_right, 
-							Compendium_t::Events_t::monsterUniqueIDLookup[entry.unique_npc] + Compendium_t::Events_t::kEventMonsterOffset, 
+						populateRecordsSectionItems(page_right,
+							Compendium_t::Events_t::monsterUniqueIDLookup[entry.unique_npc] + Compendium_t::Events_t::kEventMonsterOffset,
 							entry.unique_npc.c_str());
 					}
 					else
 					{
-						populateRecordsSectionItems(page_right, 
-							entry.monsterType + Compendium_t::Events_t::kEventMonsterOffset, 
+						populateRecordsSectionItems(page_right,
+							entry.monsterType + Compendium_t::Events_t::kEventMonsterOffset,
 							monstertypename[entry.monsterType]);
 					}
 
@@ -37591,7 +37593,7 @@ failed:
 				if ( pagePrev ) { pagePrev->setDisabled(true); }
 				if ( pageNext ) { pageNext->setDisabled(true); }
 			}
-			else 
+			else
 			{
 				if ( pageNumberLeft ) { pageNumberLeft->setDisabled(false); }
 				if ( pageNumberRight ) { pageNumberRight->setDisabled(true); }
@@ -37647,7 +37649,7 @@ failed:
 						pagePrev->setText(txt.c_str());
 					}
 				}
-				
+
 				{
 					std::string txt = Language::get(6180);
 					int nextId = -1;
@@ -37814,7 +37816,7 @@ failed:
 		{
 			if ( compendium_current == "monsters" )
 			{
-				Compendium_t::CompendiumMonsters_t::contents[Compendium_t::compendium_sorting] 
+				Compendium_t::CompendiumMonsters_t::contents[Compendium_t::compendium_sorting]
 					= Compendium_t::CompendiumMonsters_t::contents_unfiltered[Compendium_t::compendium_sorting];
 				if ( ((!intro && ::arachnophobia_filter) || (intro && MainMenu::arachnophobia_filter)) )
 				{
@@ -37873,7 +37875,7 @@ failed:
 				: (compendium_current == "world" ? &Compendium_t::CompendiumWorld_t::unlocks
 					: (compendium_current == "codex" ? &Compendium_t::CompendiumCodex_t::unlocks
 						: (compendium_current == "items" ? &Compendium_t::CompendiumItems_t::unlocks
-							: (compendium_current == "magic" ? &Compendium_t::CompendiumItems_t::unlocks 
+							: (compendium_current == "magic" ? &Compendium_t::CompendiumItems_t::unlocks
 								: (compendium_current == "achievements" ? &Compendium_t::AchievementData_t::unlocks
 								: nullptr)))));
 
@@ -37997,8 +37999,8 @@ failed:
 						entry->color = compendiumContentsDivColor;
 
 						contents->addImage(SDL_Rect{ 0, (int)(contents->getEntries().size() - 1) * contents->getEntrySize(), contents->getSize().w, 20 },
-							0xFFFFFFFF, 
-							"*images/ui/Main Menus/AdventureArchives/Divider_00.png", 
+							0xFFFFFFFF,
+							"*images/ui/Main Menus/AdventureArchives/Divider_00.png",
 							"entry div");
 					}
 					else
@@ -38218,9 +38220,9 @@ failed:
 		}
 
 		static const std::map<int, std::vector<std::string>> backingImgs =
-		{ 
-			{ 
-				Compendium_t::AchievementData_t::AchievementDLCType::ACH_TYPE_DLC1, 
+		{
+			{
+				Compendium_t::AchievementData_t::AchievementDLCType::ACH_TYPE_DLC1,
 				{
 					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_Locked_00.png",
 					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_DLCCompleted_00.png",
@@ -38245,9 +38247,9 @@ failed:
 			},
 			{
 				Compendium_t::AchievementData_t::AchievementDLCType::ACH_TYPE_NORMAL,
-				{ 
-					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_Locked_00.png", 
-					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_BaseCompleted_00.png", 
+				{
+					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_Locked_00.png",
+					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_BaseCompleted_00.png",
 					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_Locked_Badge_00.png",
 					"*#images/ui/Main Menus/AdventureArchives/A_AchBox_Locked_Badge_00.png",
 					"",
@@ -39561,11 +39563,11 @@ failed:
 		}
 	}
 
-	static ConsoleCommand ccmd_compendiumExportMonster("/compendium_export_monster", "exports current monster in view", 
+	static ConsoleCommand ccmd_compendiumExportMonster("/compendium_export_monster", "exports current monster in view",
 		[](int argc, const char** argv) {
 			CompendiumEntries.exportCurrentMonster(compendiumMonster);
 		});
-	static ConsoleVariable<bool> cvar_compendiumautoreload("/compendiumautoreload", 
+	static ConsoleVariable<bool> cvar_compendiumautoreload("/compendiumautoreload",
 #if !defined(NDEBUG)
 		true
 #else
@@ -40002,7 +40004,7 @@ failed:
 		}
 
 		auto background = window->addImage(
-			SDL_Rect{ 
+			SDL_Rect{
 			*cvar_compendium_book_x + (Frame::virtualScreenX - 958) / 2,
 			(Frame::virtualScreenY - 598) / 2 + 1,
 			958,
@@ -41490,7 +41492,7 @@ failed:
 						for ( int i = selection; i < list.size(); ++i )
 						{
 							int y = i * frame->getEntrySize();
-							if ( !list[i]->navigable ) 
+							if ( !list[i]->navigable )
 							{
 								continue;
 							}
@@ -42046,7 +42048,7 @@ failed:
 					{
 						Button* right_back_button = createBackWidget(compendium, [](Button& button) {
 							Frame* back = static_cast<Frame*>(button.getParent());
-							if ( !back ) 
+							if ( !back )
 							{
 								return;
 							}
@@ -42285,8 +42287,8 @@ failed:
 		page_right_title->setSize(SDL_Rect{ page_right->getSize().x + 8, page_right->getSize().y - 10, page_right->getSize().w - 24, 28 });
 		page_right_title->setColor(makeColor(42, 22, 18, 255));
 
-		auto right_slider_bg = page_right->addImage(SDL_Rect{ 
-			page_right_inner->getSize().x + page_right_inner->getSize().w - 18, 
+		auto right_slider_bg = page_right->addImage(SDL_Rect{
+			page_right_inner->getSize().x + page_right_inner->getSize().w - 18,
 			page_right_inner->getSize().y + 20,
 			16, compendiumPageRightInnerHeight },
 			0xFFFFFFFF,
@@ -42294,8 +42296,8 @@ failed:
 			"right_slider_bg");
 
 		auto right_slider = page_right->addSlider("right_slider");
-		right_slider->setRailSize(SDL_Rect{ 
-			page_right_inner->getSize().x + page_right_inner->getSize().w - 20, 
+		right_slider->setRailSize(SDL_Rect{
+			page_right_inner->getSize().x + page_right_inner->getSize().w - 20,
 			page_right_inner->getSize().y + 20 + 4, 20, compendiumPageRightInnerHeight - 8 - 24 });
 		//right_slider->setRailImage("*images/ui/Main Menus/AdventureArchives/C_Details_ScrollBar_00.png");
 		right_slider->setHandleSize(SDL_Rect{ 0, 0, 20, 28 });
@@ -42379,7 +42381,7 @@ failed:
 					else
 					{
 						widget.setInvisible(true);
-						
+
 						slider->setValue(0);
 						if ( widget.isSelected() )
 						{

@@ -2069,7 +2069,7 @@ void EOSFuncs::joinLobby(LobbyData_t* lobby)
 	{
 		return;
 	}
-	
+
 	if (!EOS.PlatformHandle)
 	{
 		return;

@@ -11,6 +11,7 @@
 
 -------------------------------------------------------------------------------*/
 
+#include "../../Config.hpp"
 #include "../../main.hpp"
 #include "../../game.hpp"
 #include "../../stat.hpp"
@@ -334,11 +335,11 @@ FMOD::Channel* playSound(Uint16 snd, Uint8 vol)
         position.x = 0.f;
         position.y = 0.f;
         position.z = 0.f;
-        
+
         channel->setVolume(vol / 255.f);
         channel->set3DAttributes(&position, nullptr);
         channel->setMode(FMOD_3D_HEADRELATIVE);
-        
+
         if (FMODErrorCheck())
         {
             return nullptr;
@@ -745,9 +746,9 @@ void handleLevelMusic()
 		currenttrack = local_rng.rand();
 	}
 
-	if ( (!levelmusicplaying || !playing || olddarkmap != darkmap) 
-		&& (!combat || !strcmp(map.name, "Hell Boss")) 
-		&& !inshop 
+	if ( (!levelmusicplaying || !playing || olddarkmap != darkmap)
+		&& (!combat || !strcmp(map.name, "Hell Boss"))
+		&& !inshop
 		&& (!activeminotaur || !strcmp(map.name, "Hell Boss")) && !herxaround && !devilaround && !magisteraround )
 	{
 		if ( !strncmp(map.name, "The Mines", 9) )     // the mines
@@ -1003,10 +1004,10 @@ void handleLevelMusic()
 		fadein_increment = default_fadein_increment * 2;
 		fadeout_increment = default_fadeout_increment * 2;
 	}
-	else if ( (!combatmusicplaying || !playing) 
-		&& !herxaround 
-		&& !activeminotaur 
-		&& combat 
+	else if ( (!combatmusicplaying || !playing)
+		&& !herxaround
+		&& !activeminotaur
+		&& combat
 		&& strcmp(map.name, "Hell Boss")
 		&& strcmp(map.name, "Sanctum") )
 	{
@@ -1211,7 +1212,7 @@ void* playSoundNotificationPlayer(int player, Uint16 snd, Uint8 vol)
 #ifdef USE_FMOD
 VoiceChat_t VoiceChat;
 VoiceChat_t::RingBuffer VoiceChat_t::ringBufferRecord(2048 * 20);
-static ConsoleCommand ccmd_voice_init("/voice_init", "", 
+static ConsoleCommand ccmd_voice_init("/voice_init", "",
 	[](int argc, const char* argv[]) {
 		VoiceChat.init();
 });
@@ -1220,7 +1221,8 @@ static ConsoleCommand ccmd_voice_deinit("/voice_deinit", "",
 		VoiceChat.deinit();
 	});
 
-FMOD_RESULT F_CALLBACK pcmreadcallback(FMOD_SOUND* sound, void* data, unsigned int datalen)
+// FMOD_RESULT F_CALLBACK pcmreadcallback(FMOD_SOUND* sound, void* data, unsigned int datalen)
+FMOD_RESULT pcmreadcallback(FMOD_SOUND* sound, void* data, unsigned int datalen)
 {
 	char* bitbuffer = (char*)data;
 	if ( !sound ) { return FMOD_OK; }
@@ -1228,14 +1230,14 @@ FMOD_RESULT F_CALLBACK pcmreadcallback(FMOD_SOUND* sound, void* data, unsigned i
 	fmod_result = ((FMOD::Sound*)sound)->getUserData(&userData);
 	if ( FMODErrorCheck() ) { return FMOD_OK; }
 	int player = reinterpret_cast<intptr_t>(userData);
-	
+
 	if ( !(player >= 0 && player < MAXPLAYERS) )
 	{
 		return FMOD_OK;
 	}
 
 	VoiceChat.PlayerChannels[player].audio_queue_mutex.lock();
-    
+
 	auto& audioQueue = VoiceChat.PlayerChannels[player].audioQueue;
 	unsigned int bytesRead = std::min(datalen, (unsigned int)audioQueue.size());
 
@@ -1281,7 +1283,7 @@ VoiceChat_t::VoicePlayerBarState VoiceChat_t::getVoiceState(const int player)
 	if ( !(voice_no_send & (1 << player)) )
 	{
 		result = VOICE_STATE_INERT; //(voice_pushtotalk & (1 << player)) ? VOICE_STATE_INERT : VOICE_STATE_MUTE;
-		if ( VoiceChat.PlayerChannels[player].talkingTicks > 0 
+		if ( VoiceChat.PlayerChannels[player].talkingTicks > 0
 			|| VoiceChat.PlayerChannels[player].monitor_output_volume >= 0.05
 			|| VoiceChat.PlayerChannels[player].lastAudibleTick > 0 )
 		{
@@ -1367,7 +1369,7 @@ void VoiceChat_t::OpusAudioCodec_t::init(int sampleRate, int numChannels)
 
 	this->sampleRate = sampleRate;
 	this->numChannels = numChannels;
-	
+
 #ifdef NINTENDO
 	if ( !nxInitOpus(sampleRate, numChannels) )
 	{
@@ -1892,9 +1894,9 @@ void VoiceChat_t::PlayerChannels_t::setupPlayback()
 	exinfoBuffer.length = windowSize/* * sizeof(short) * nativeChannels*/;
 	exinfoBuffer.pcmreadcallback = pcmreadcallback;
 	exinfoBuffer.userdata = (void*)(intptr_t)(player);
-	fmod_result = fmod_system->createSound(nullptr, FMOD_LOOP_NORMAL 
-		| FMOD_OPENUSER 
-		| FMOD_CREATESTREAM 
+	fmod_result = fmod_system->createSound(nullptr, FMOD_LOOP_NORMAL
+		| FMOD_OPENUSER
+		| FMOD_CREATESTREAM
 		| FMOD_3D
 		| FMOD_3D_CUSTOMROLLOFF, &exinfoBuffer, &outputSound);
 
@@ -2234,7 +2236,7 @@ void VoiceChat_t::updateRecording()
 
 	if ( (multiplayer == SINGLE && !*cvar_voice_debug)
 		|| !getAudioSettingBool(AudioSettingBool::VOICE_SETTING_ENABLE_VOICE_INPUT)
-		|| (intro && (!net_packet 
+		|| (intro && (!net_packet
 			|| (MainMenu::main_menu_frame && MainMenu::main_menu_frame->findFrame("lobby") && !MainMenu::isPlayerSignedIn(clientnum))))
 		|| input.input(voiceBindingName).type == Input::binding_t::INVALID )
 	{
@@ -2443,7 +2445,7 @@ void VoiceChat_t::updateRecording()
 				{
 					recordingChannel->addDSP(2, dsp_fader);
 					dsp_fader->setChannelFormat(0, nativeChannels, FMOD_SPEAKERMODE_MONO);
-					fmod_result = dsp_fader->setParameterFloat(FMOD_DSP_FADER_GAIN, std::min(kMaxGain, 
+					fmod_result = dsp_fader->setParameterFloat(FMOD_DSP_FADER_GAIN, std::min(kMaxGain,
 						getAudioSettingFloat(AudioSettingFloat::VOICE_SETTING_RECORDINGGAIN) - 100.f));
 					dsp_fader->setMeteringEnabled(true, true);
 				}
@@ -2461,7 +2463,7 @@ void VoiceChat_t::updateRecording()
 					else
 					{
 						dsp_normalize->setBypass(false);
-						fmod_result = dsp_normalize->setParameterFloat(FMOD_DSP_NORMALIZE_MAXAMP, 
+						fmod_result = dsp_normalize->setParameterFloat(FMOD_DSP_NORMALIZE_MAXAMP,
 							std::min(100.f, std::max(1.f, getAudioSettingFloat(AudioSettingFloat::VOICE_SETTING_NORMALIZE_AMP))));
 						fmod_result = dsp_normalize->setParameterFloat(FMOD_DSP_NORMALIZE_THRESHOLD,
 							std::min(1.f, std::max(0.f, getAudioSettingFloat(AudioSettingFloat::VOICE_SETTING_NORMALIZE_THRESHOLD))));
@@ -2523,7 +2525,7 @@ void VoiceChat_t::updateRecording()
 						}*/
 						if ( type == FMOD_DSP_TYPE::FMOD_DSP_TYPE_FADER && in && out )
 						{
-							fmod_result = dsp->setParameterFloat(FMOD_DSP_FADER_GAIN, std::min(kMaxGain, 
+							fmod_result = dsp->setParameterFloat(FMOD_DSP_FADER_GAIN, std::min(kMaxGain,
 								std::max(-80.f, getAudioSettingFloat(AudioSettingFloat::VOICE_SETTING_RECORDINGGAIN) - 100.f)));
 							FMOD_DSP_METERING_INFO input_metering{};
 							FMOD_DSP_METERING_INFO output_metering{};
@@ -2693,12 +2695,12 @@ void VoiceChat_t::update()
 				fmod_result = PlayerChannels[i].outputChannel->getDSP(DSPORDER_FADER_CHANNELGAIN, &dsp_fader);
 				if ( dsp_fader )
 				{
-					fmod_result = dsp_fader->setParameterFloat(FMOD_DSP_FADER_GAIN, 
+					fmod_result = dsp_fader->setParameterFloat(FMOD_DSP_FADER_GAIN,
 						std::min(kMaxGain, (std::max(-80.f, PlayerChannels[i].channelGain - 100.f))));
 				}
 			}
 
-			if ( i == clientnum 
+			if ( i == clientnum
 				&& !((mainMenuAudioTabOpen() && getAudioSettingBool(AudioSettingBool::VOICE_SETTING_LOOPBACK_LOCAL_RECORD))
 					|| (getAudioSettingBool(AudioSettingBool::VOICE_SETTING_LOOPBACK_LOCAL_RECORD) && *cvar_voice_loopback_ingame) ) )
 			{
@@ -2797,17 +2799,17 @@ void VoiceChat_t::update()
 					if ( entity->behavior == &actDeathGhost )
 					{
 						setReverbSettings(dsp_reverb, cvar_voice_reverb_ghost->x, cvar_voice_reverb_ghost->y, cvar_voice_reverb_ghost->z);
-						setEQSettings(dsp_eq, 
-							cvar_voice_eq_ghost->x - lowpassAmount * lowpassAttenuation, 
-							cvar_voice_eq_ghost->y, 
+						setEQSettings(dsp_eq,
+							cvar_voice_eq_ghost->x - lowpassAmount * lowpassAttenuation,
+							cvar_voice_eq_ghost->y,
 							cvar_voice_eq_ghost->z);
 					}
 					else
 					{
 						setReverbSettings(dsp_reverb, cvar_voice_reverb_player->x, cvar_voice_reverb_player->y, cvar_voice_reverb_player->z);
-						setEQSettings(dsp_eq, 
-							cvar_voice_eq_player->x - lowpassAmount * lowpassAttenuation, 
-							cvar_voice_eq_player->y, 
+						setEQSettings(dsp_eq,
+							cvar_voice_eq_player->x - lowpassAmount * lowpassAttenuation,
+							cvar_voice_eq_player->y,
 							cvar_voice_eq_player->z);
 					}
 				}
@@ -2833,9 +2835,9 @@ void VoiceChat_t::update()
 					}
 
 					setReverbSettings(dsp_reverb, cvar_voice_reverb_ghost->x, cvar_voice_reverb_ghost->y, cvar_voice_reverb_ghost->z);
-					setEQSettings(dsp_eq, 
-						cvar_voice_eq_ghost->x - lowpassAmount * lowpassAttenuation, 
-						cvar_voice_eq_ghost->y, 
+					setEQSettings(dsp_eq,
+						cvar_voice_eq_ghost->x - lowpassAmount * lowpassAttenuation,
+						cvar_voice_eq_ghost->y,
 						cvar_voice_eq_ghost->z);
 				}
 			}
@@ -2946,7 +2948,7 @@ void VoiceChat_t::sendPackets()
 					packet->data[4] |= (Uint8)i;
 					receivePacket(packet);
 				}
-				
+
 				if ( sendVoice )
 				{
 					if ( i == 0 )
@@ -3068,7 +3070,7 @@ void VoiceChat_t::receivePacket(UDPpacket* packet)
 				{
 					PlayerChannels[player].audio_queue_mutex.lock();
 					int i = 0;
-					for ( i = 0; i < OpusAudioCodec.numChannels * frame_size 
+					for ( i = 0; i < OpusAudioCodec.numChannels * frame_size
 						&& (PlayerChannels[player].audioQueue.size() < PlayerChannels_t::audioQueueSizeLimit - 1); i++ )
 					{
 						// insert 2x bytes per decoded unit

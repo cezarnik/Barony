@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "debug",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "/home/cezarnik/repos/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_CXX_FLAGS": "-g"
+      }
+    },
+    {
+      "name": "release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "/home/cezarnik/repos/vcpkg/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_CXX_FLAGS_RELEASE_INIT": "-g"
+      }
+    }
+  ]
+
+}
+

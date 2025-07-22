@@ -55,7 +55,7 @@ bool loadMusic();
 
 extern FMOD_SPEAKERMODE fmod_speakermode;
 
-extern const char* fmod_speakermode_strings[FMOD_SPEAKERMODE_MAX]; 
+extern const char* fmod_speakermode_strings[FMOD_SPEAKERMODE_MAX];
 
 extern FMOD::System* fmod_system;
 
