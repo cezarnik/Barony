@@ -24,6 +24,7 @@
 #include "items.hpp"
 #include "shops.hpp"
 #include "menu.hpp"
+#include "multiplayer.h"
 #include "scores.hpp"
 #include "collision.hpp"
 #include "paths.hpp"
@@ -374,6 +375,9 @@ bool messageLocalPlayersColor(Uint32 color, Uint32 type, char const * const mess
 
 bool messagePlayerColor(int player, Uint32 type, Uint32 color, char const * const message, ...)
 {
+	if (client_disconnected[player]) {
+		return false;
+	}
 	char str[Player::MessageZone_t::ADD_MESSAGE_BUFFER_LENGTH] = { 0 };
 	va_list argptr;
 
@@ -397,7 +401,7 @@ bool messagePlayerColor(int player, Uint32 type, Uint32 color, char const * cons
 		printlog("%s\n", str);
 		return true;
 	}
-    
+
     // don't bother printing any message if we're not in game, it just clutters the log
     if (intro) {
         return false;
@@ -411,7 +415,7 @@ bool messagePlayerColor(int player, Uint32 type, Uint32 color, char const * cons
 	{
 	    printlog("%s\n", str);
 #ifdef NDEBUG
-		if (type != MESSAGE_DEBUG) { 
+		if (type != MESSAGE_DEBUG) {
 			auto string = newString(&messages, color, completionTime, player, str);
 			addMessageToLogWindow(player, string);
 		}
@@ -1369,7 +1373,7 @@ void sendMinimapPing(Uint8 player, Uint8 x, Uint8 y, Uint8 pingType)
 	if ( multiplayer == CLIENT )
 	{
 		// send to host to relay info.
-		strcpy((char*)net_packet->data, "PMAP"); 
+		strcpy((char*)net_packet->data, "PMAP");
 		net_packet->data[4] = player;
 		net_packet->data[5] = x;
 		net_packet->data[6] = y;
@@ -1526,6 +1530,7 @@ NetworkingLobbyJoinRequestResult lobbyPlayerJoinRequest(int& outResult, bool loc
 
 		// on success, client gets legit player number
 		client_disconnected[c] = false;
+		NMultiplayer::markPlayerConnectedRemotely(c);
         stringCopy(stats[c]->name, (const char*)net_packet->data + 4, sizeof(Stat::name), 32);
 		client_classes[c] = (int)SDLNet_Read32(&net_packet->data[36]);
 		stats[c]->sex = static_cast<sex_t>((int)SDLNet_Read32(&net_packet->data[40]));
@@ -2254,7 +2259,7 @@ static void changeLevel() {
     destroyLoadingScreen();
 	loading = false;
     int result = loading_task.get();
-    
+
     clearChunks();
     createChunks();
 
@@ -2451,7 +2456,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 		//	}
 		//}
 	}},
-    
+
     // raise/lower shield
     {'SHLD', [](){
         const int player = std::min(net_packet->data[4], (Uint8)(MAXPLAYERS - 1));
@@ -2791,7 +2796,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 			entity->x = ((Sint16)SDLNet_Read16(&net_packet->data[8])) / 32.0;
 			entity->y = ((Sint16)SDLNet_Read16(&net_packet->data[10])) / 32.0;
 			entity->z = ((Sint16)SDLNet_Read16(&net_packet->data[12])) / 32.0;
-			
+
 			entity->vel_x = ((Sint16)SDLNet_Read16(&net_packet->data[14])) / 32.0;
 			entity->vel_y = ((Sint16)SDLNet_Read16(&net_packet->data[16])) / 32.0;
 			entity->vel_z = ((Sint16)SDLNet_Read16(&net_packet->data[18])) / 32.0;
@@ -2882,7 +2887,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 		}
 	} },
 
-	// spawn misc particle effect 
+	// spawn misc particle effect
 	{'SPPE', [](){
 		Entity *entity = uidToEntity((int)SDLNet_Read32(&net_packet->data[4]));
 		if ( entity )
@@ -3108,7 +3113,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 		}
 		char enemy_name[128] = "";
 		strcpy(enemy_name, (char*)(&net_packet->data[31]));
-		auto details = enemyHPDamageBarHandler[clientnum].addEnemyToList(static_cast<Sint32>(enemy_hp), 
+		auto details = enemyHPDamageBarHandler[clientnum].addEnemyToList(static_cast<Sint32>(enemy_hp),
 			static_cast<Sint32>(enemy_maxhp), static_cast<Sint32>(oldhp), uid, enemy_name, lowPriorityTick, gib);
 		if ( details )
 		{
@@ -3533,14 +3538,14 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 				break;
 		}
 
-		
+
 		ItemType checkType = static_cast<ItemType>(SDLNet_Read32(&net_packet->data[5]));
 		Status checkStatus = static_cast<Status>(SDLNet_Read32(&net_packet->data[9]));
 		Sint16 checkBeatitude = static_cast<Sint16>(SDLNet_Read32(&net_packet->data[13]));
 		Sint16 checkCount = static_cast<Sint16>(SDLNet_Read32(&net_packet->data[17]));
 		Uint32 checkAppearance = static_cast<Uint32>(SDLNet_Read32(&net_packet->data[21]));
 		bool checkIdentified = net_packet->data[25] == 1 ? true : false;
-		
+
 		if ( item )
 		{
 			if ( item->type == checkType
@@ -3624,7 +3629,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 
 	// damage indicator
 	{'DAMI', [](){
-		DamageIndicatorHandler.insert(clientnum, SDLNet_Read32(&net_packet->data[4]), 
+		DamageIndicatorHandler.insert(clientnum, SDLNet_Read32(&net_packet->data[4]),
 			SDLNet_Read32(&net_packet->data[8]), net_packet->data[12] == 1 ? true : false);
 	} },
 
@@ -4116,7 +4121,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 				playSound(Message::CHAT_MESSAGE_SFX, 64);
 			}
 		}
-		
+
 		if ( !strcmp(msg, Language::get(1109)) ) // "you survive through your party's persistence"
 		{
 			// ... or lived
@@ -4489,7 +4494,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 				{
 					strcpy(monster->clientStats->name, (char*)&net_packet->data[12]);
 				}
-                if ( monster->clientStats->name[0] && (!monsterNameIsGeneric(*monster->clientStats) || monster->clientStats->type == SLIME)) 
+                if ( monster->clientStats->name[0] && (!monsterNameIsGeneric(*monster->clientStats) || monster->clientStats->type == SLIME))
 				{
                     Entity* nametag = newEntity(-1, 1, map.entities, nullptr);
                     nametag->x = monster->x;
@@ -5098,8 +5103,8 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 	}},
 
 	{'PMAP', [](){
-		MinimapPing newPing(ticks, net_packet->data[4], 
-			net_packet->data[5], 
+		MinimapPing newPing(ticks, net_packet->data[4],
+			net_packet->data[5],
 			net_packet->data[6],
 			false,
 			(MinimapPing::PingType)net_packet->data[7]);
@@ -5259,7 +5264,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 	// text bubbles
 	{'BUBL', []() {
 		Uint32 uid = SDLNet_Read32(&net_packet->data[4]);
-		Player::WorldUI_t::WorldTooltipDialogue_t::DialogueType_t type = 
+		Player::WorldUI_t::WorldTooltipDialogue_t::DialogueType_t type =
 			(Player::WorldUI_t::WorldTooltipDialogue_t::DialogueType_t)net_packet->data[8];
 		const char* msg = (const char*)(&net_packet->data[9]);
 		players[clientnum]->worldUI.worldTooltipDialogue.createDialogueTooltip(uid, type, msg);
@@ -5373,13 +5378,13 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 									}
 									if ( itemType >= Compendium_t::Events_t::kEventWorldOffset && itemType < Compendium_t::Events_t::kEventWorldOffset + 1000 )
 									{
-										Compendium_t::Events_t::eventUpdateWorld(0, (Compendium_t::EventTags)id, nullptr, value, false, 
+										Compendium_t::Events_t::eventUpdateWorld(0, (Compendium_t::EventTags)id, nullptr, value, false,
 											itemType - Compendium_t::Events_t::kEventWorldOffset);
 										continue;
 									}
 									if ( itemType >= Compendium_t::Events_t::kEventCodexOffset && itemType <= Compendium_t::Events_t::kEventCodexOffsetMax )
 									{
-										Compendium_t::Events_t::eventUpdateCodex(0, (Compendium_t::EventTags)id, nullptr, value, false, 
+										Compendium_t::Events_t::eventUpdateCodex(0, (Compendium_t::EventTags)id, nullptr, value, false,
 											itemType);
 										continue;
 									}
@@ -5389,7 +5394,7 @@ static std::unordered_map<Uint32, void(*)()> clientPacketHandlers = {
 									}
 									if ( itemType >= Compendium_t::Events_t::kEventSpellOffset )
 									{
-										Compendium_t::Events_t::eventUpdate(0, (Compendium_t::EventTags)id, SPELL_ITEM, value, false, 
+										Compendium_t::Events_t::eventUpdate(0, (Compendium_t::EventTags)id, SPELL_ITEM, value, false,
 											itemType - Compendium_t::Events_t::kEventSpellOffset);
 									}
 									else
@@ -6076,7 +6081,7 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 		{
 			return;
 		}
-		
+
 		int player = net_packet->data[4];
 
 		if ( player < 0 || player >= MAXPLAYERS )
@@ -6791,7 +6796,7 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 		    SDLNet_Read32(&net_packet->data[20]),
 		    net_packet->data[24],
 		    &stats[client]->inventory);
-		
+
 		switch ( net_packet->data[27] )
 		{
 			case EQUIP_ITEM_SLOT_WEAPON:
@@ -6980,7 +6985,7 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 					messagePlayerColor(player, MESSAGE_STATUS, makeColorRGB(0, 255, 0), Language::get(6089));
 				}
 			}
-			spawnMagicTower(protection ? players[player]->entity : nullptr, 
+			spawnMagicTower(protection ? players[player]->entity : nullptr,
 				players[player]->entity->x, players[player]->entity->y, SPELL_FIREBALL, nullptr);
 			players[player]->entity->setObituary(Language::get(3350));
 			stats[player]->killer = KilledBy::FAILED_ALCHEMY;
@@ -7140,7 +7145,7 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 		{
 			return;
 		}
-		
+
 		if ( static_cast<int>(net_packet->data[6]) > EXCELLENT )
 		{
 			equipment->status = EXCELLENT;
@@ -7350,8 +7355,8 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 
 	// the client sent a minimap ping packet.
 	{'PMAP', [](){
-		MinimapPing newPing(ticks, net_packet->data[4], 
-			net_packet->data[5], 
+		MinimapPing newPing(ticks, net_packet->data[4],
+			net_packet->data[5],
 			net_packet->data[6],
 			false,
 			(MinimapPing::PingType)net_packet->data[7]);
@@ -7440,7 +7445,7 @@ static std::unordered_map<Uint32, void(*)()> serverPacketHandlers = {
 		{
 			if ( players[player]->entity->setEffect(EFF_BLEEDING, true, TICKS_PER_SECOND * 15, true) )
 			{
-				messagePlayerColor(player, MESSAGE_STATUS, 
+				messagePlayerColor(player, MESSAGE_STATUS,
 					makeColorRGB(255, 0, 0), Language::get(701)); // you're bleeding!
 			}
 			playSoundEntity(players[player]->entity, 162, 64);
@@ -8405,7 +8410,7 @@ void PingNetworkStatus_t::update()
 	if ( true )
 	{
 		bool updated = false;
-		if ( multiplayer == CLIENT ) 
+		if ( multiplayer == CLIENT )
 		{
 			if ( PingNetworkStatus[0].needsUpdate || (ticks % (5 * TICKS_PER_SECOND) == 0) )
 			{
@@ -8425,11 +8430,11 @@ void PingNetworkStatus_t::update()
 				PingNetworkStatus[0].pings[PingNetworkStatus[0].sequence] = SDL_GetTicks();
 			}
 		}
-		else if ( multiplayer == SERVER ) 
+		else if ( multiplayer == SERVER )
 		{
-			for ( int i = 1; i < MAXPLAYERS; i++ ) 
+			for ( int i = 1; i < MAXPLAYERS; i++ )
 			{
-				if ( client_disconnected[i] ) 
+				if ( client_disconnected[i] )
 				{
 					continue;
 				}

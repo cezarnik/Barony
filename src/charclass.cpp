@@ -601,7 +601,7 @@ void initClass(const int player)
 			// don't do anything crazy with items on players we don't own
 			return;
 		}
-        
+
         // ring of strength
         item = newItem(RING_STRENGTH, WORN, 0, 1, 0, true, nullptr);
         if ( isLocalPlayer )
@@ -825,7 +825,7 @@ void initClass(const int player)
 		{
 			useItem(item, player);
 		}
-		
+
 		// cloak (red, protection)
 		item = newItem(CLOAK, SERVICABLE, 0, 1, 2, true, nullptr);
 		if ( isLocalPlayer )
@@ -1945,7 +1945,7 @@ void initClass(const int player)
 			item2 = itemPickup(player, item);
 			hotbar[2].item = item2->uid;
 			free(item);
-			
+
 			// paralyze potion
 			item = newItem(POTION_PARALYSIS, EXCELLENT, 0, 1, 1, true, nullptr);
 			item2 = itemPickup(player, item);
@@ -2366,7 +2366,7 @@ void initClass(const int player)
 			item2 = itemPickup(player, item);
 			hotbar[7].item = item2->uid;
 			free(item);
-			
+
 			// polymorph
 			item = newItem(POTION_POLYMORPH, EXCELLENT, 0, 1, 0, true, nullptr);
 			item2 = itemPickup(player, item);
@@ -2790,8 +2790,8 @@ void initClass(const int player)
 		//stats[player]->HUNGER = 150;
 	}
 
-	if ( stats[player]->stat_appearance == 0 
-		&& client_classes[player] <= CLASS_MONK 
+	if ( stats[player]->stat_appearance == 0
+		&& client_classes[player] <= CLASS_MONK
 		&& stats[player]->playerRace != RACE_HUMAN )
 	{
 		if ( isLocalPlayer )
@@ -2802,9 +2802,9 @@ void initClass(const int player)
 			free(item);
 		}
 	}
-	if ( stats[player]->stat_appearance == 0 
-		&& client_classes[player] >= CLASS_CONJURER 
-		&& client_classes[player] <= CLASS_HUNTER 
+	if ( stats[player]->stat_appearance == 0
+		&& client_classes[player] >= CLASS_CONJURER
+		&& client_classes[player] <= CLASS_HUNTER
 		&& stats[player]->playerRace != RACE_HUMAN )
 	{
 		if ( isLocalPlayer )
@@ -3260,7 +3260,7 @@ void deinitShapeshiftHotbar(int player)
 				spell_t* spell = getSpellFromItem(player, item, true);
 				if ( spell && client_classes[player] == CLASS_SHAMAN )
 				{
-					// move shapeshift spells out of inventory. 
+					// move shapeshift spells out of inventory.
 					// if somehow the spell got added to your selected spell then remove it.
 					switch ( spell->ID )
 					{

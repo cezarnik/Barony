@@ -14,6 +14,7 @@ list(APPEND GAME_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/paths.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/charclass.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/net.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/multiplayer.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/game.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/stat.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/acttorch.cpp"

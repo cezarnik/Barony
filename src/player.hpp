@@ -181,7 +181,7 @@ public:
 		bool binaryRelease = false;
 		bool binaryReleaseConsumed = false;
 
-		enum Bindtype_t 
+		enum Bindtype_t
 		{
 			INVALID,
 			KEYBOARD,
@@ -407,7 +407,7 @@ class Inputs
 	UIStatus uiStatus[MAXPLAYERS];
 
 public:
-	Inputs() 
+	Inputs()
 	{
 		for ( int i = 0; i < MAXPLAYERS; ++i )
 		{
@@ -532,11 +532,12 @@ public:
 	}
 	GameController* getController(int player) const;
 
-	const bool hasController(int player) const 
+	const bool hasController(int player) const
 	{
-		if (multiplayer != SINGLE && player != 0) {
-			return hasController(0);
-		}
+		// Does not work anymore, with multiplayer != Single there can be multiple local controllers.
+		// if (multiplayer != SINGLE && player != 0) {
+		// 	return hasController(0);
+		// }
 		if ( player < 0 || player >= MAXPLAYERS )
 		{
 			printlog("[INPUTS]: Warning: player index %d out of range.", player);
@@ -544,7 +545,7 @@ public:
 		}
 		return playerControllerIds[player] != -1 && getController(player);
 	}
-	void setControllerID(int player, const int id) 
+	void setControllerID(int player, const int id)
 	{
 		if (multiplayer != SINGLE && player != 0) {
 			return setControllerID(0, id);
@@ -589,7 +590,7 @@ public:
 				}
 			}
 		}
-		/*messagePlayer(0, "x: %d | y: %d / x: %d | y: %d / x: %d | y: %d / x: %d | y: %d ", 
+		/*messagePlayer(0, "x: %d | y: %d / x: %d | y: %d / x: %d | y: %d / x: %d | y: %d ",
 			vmouse[0].ox, vmouse[0].oy,
 			vmouse[1].ox, vmouse[1].oy,
 			vmouse[2].ox, vmouse[2].oy,
@@ -649,7 +650,7 @@ class Player
 	//Splitscreen support. Every player gets their own screen.
 	//Except in multiplayer. In that case, this is just a big old dummy class.
 	//SDL_Surface* screen;
-	
+
 	//Is this a hotseat player? If so, draw splitscreen and stuff. (Host player is automatically a hotseat player). If not, then this is a dummy container for the multiplayer client.
 	bool local_host;
 	view_t* cam;
@@ -1044,9 +1045,9 @@ public:
 		static const int MAX_SPELLS_Y;
 		static const int MAX_CHEST_X;
 		static const int MAX_CHEST_Y;
-		Inventory_t(Player& p) : 
-			player(p), 
-			appraisal(p), 
+		Inventory_t(Player& p) :
+			player(p),
+			appraisal(p),
 			spellPanel(p),
 			chestGUI(p),
 			DEFAULT_INVENTORY_SIZEX(12),
@@ -1486,7 +1487,7 @@ public:
 		bool shieldSwitch = false;
 
 		Sint32 throwGimpTimer = 0; // player cannot throw objects unless zero
-		Sint32 pickaxeGimpTimer = 0; // player cannot swap weapons immediately after using pickaxe 
+		Sint32 pickaxeGimpTimer = 0; // player cannot swap weapons immediately after using pickaxe
 									 // due to multiplayer weapon degrade lag... equipping new weapon before degrade
 									 // message hits can degrade the wrong weapon.
 		Sint32 swapWeaponGimpTimer = 0; // player cannot swap weapons unless zero
@@ -1744,9 +1745,9 @@ public:
 			selected_spell_last_appearance = -1;
 			quick_cast_spell = nullptr;
 		}
-		void equipSpell(spell_t* spell) 
-		{ 
-			selected_spell = spell; 
+		void equipSpell(spell_t* spell)
+		{
+			selected_spell = spell;
 		}
 		void setQuickCastSpellFromInventory(Item* item);
 		bool doQuickCastSpell() { return quick_cast_spell != nullptr; }
@@ -1763,7 +1764,7 @@ public:
 		int quickTurnDirection = 1; // 1 == right, -1 == left
 		real_t quickTurnSpeed = PI / 15;
 	} settings;
-	
+
 	class PlayerMovement_t
 	{
 		real_t quickTurnRotation = 0.0;
@@ -1774,7 +1775,7 @@ public:
 		PlayerMovement_t(Player& p) : player(p)
 		{};
 		~PlayerMovement_t() {};
-		
+
 		int monsterEmoteGimpTimer = 0;
 		int selectedEntityGimpTimer = 0;
 		bool insectoidLevitating = false;
@@ -1936,7 +1937,7 @@ public:
 			Player& player;
 			WorldTooltipItem_t(Player& p) : player(p)
 			{};
-			~WorldTooltipItem_t() 
+			~WorldTooltipItem_t()
 			{
 				if ( itemFrame )
 				{
@@ -2010,7 +2011,7 @@ public:
 				{
 					this->player = player;
 				};
-				~Dialogue_t() 
+				~Dialogue_t()
 				{
 					if ( dialogueField )
 					{
@@ -2052,7 +2053,7 @@ public:
 			};
 		} worldTooltipDialogue;
 
-		WorldUI_t(Player& p) : 
+		WorldUI_t(Player& p) :
 			player(p),
 			worldTooltipItem(p),
 			worldTooltipDialogue(p)
@@ -2072,8 +2073,8 @@ public:
 		Uint32 uidForActiveTooltip = 0;
 		std::string interactText = "Interact";
 		void enable() { bEnabled = true; }
-		void disable() { 
-			bEnabled = false; 
+		void disable() {
+			bEnabled = false;
 			reset();
 		}
 		bool isEnabled() const { return bEnabled; }
@@ -2210,7 +2211,7 @@ public:
 		int radialHotbarSlots = NUM_HOTBAR_SLOTS;
 		int radialHotbarProgress = 0;
 		int oldSlotFrameTrackSlot = -1;
-		
+
 		real_t animHide = 0.0;
 
 		std::array<SDL_Rect, NUM_HOTBAR_SLOTS> faceButtonPositions;

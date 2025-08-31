@@ -12,6 +12,8 @@
 #include "../player.hpp"
 #include "../stat.hpp"
 #include "../menu.hpp"
+#include "../multiplayer.h"
+
 #include "../scores.hpp"
 #include "../mod_tools.hpp"
 #include "../interface/interface.hpp"
@@ -1032,38 +1034,22 @@ namespace MainMenu {
 /******************************************************************************/
 
 	void setupSplitscreen() {
-		if (multiplayer != SINGLE) {
-			splitscreen = false;
-		    for (int c = 0; c < MAXPLAYERS; ++c) {
-		        players[c]->bSplitscreen = false;
-				players[c]->camera().winx = 0;
-				players[c]->camera().winy = 0;
-				players[c]->camera().winw = xres;
-				players[c]->camera().winh = yres;
-			}
-#ifdef NINTENDO
-			fpsLimit = 60;
-#endif
-			return;
-		}
-
-	    int playercount = 0;
+	    int local_playercount = 0;
 	    for (int c = 0; c < MAX_SPLITSCREEN; ++c) {
-		    if (client_disconnected[c]) {
-			    continue;
+		    if (!client_disconnected[c] && NMultiplayer::isPlayerConnectedLocally(c)) {
+				++local_playercount;
 		    }
-			++playercount;
 	    }
-		splitscreen = playercount > 1;
+		splitscreen = local_playercount > 1;
 
 		// on nintendo, we have to limit the FPS to 30 for 3+ players.
 #ifdef NINTENDO
-		fpsLimit = playercount > 2 ? 30 : 60;
+		fpsLimit = local_playercount > 2 ? 30 : 60;
 #endif
 
 		int c, playerindex;
 		for (c = 0, playerindex = 0; c < MAX_SPLITSCREEN; ++c, ++playerindex) {
-			if (client_disconnected[c]) {
+			if (client_disconnected[c] || !NMultiplayer::isPlayerConnectedLocally(c)) {
 				--playerindex;
 				continue;
 			}
@@ -1080,12 +1066,12 @@ namespace MainMenu {
 				players[c]->camera().winw = xres;
 				players[c]->camera().winh = yres;
 			} else {
-				if (playercount == 1) {
+				if (local_playercount == 1) {
 					players[c]->camera().winx = 0;
 					players[c]->camera().winy = 0;
 					players[c]->camera().winw = xres;
 					players[c]->camera().winh = yres;
-				} else if (playercount == 2) {
+				} else if (local_playercount == 2) {
 				    const bool clipped = *clipped_splitscreen;
 				    const bool staggered = *staggered_splitscreen;
 					if (players[c]->splitScreenType == Player::SPLITSCREEN_VERTICAL) {
@@ -1105,7 +1091,7 @@ namespace MainMenu {
 						players[c]->camera().winw = clipped ? (xres - clip) : xres;
 						players[c]->camera().winh = yres / 2;
 					}
-				} else if (playercount >= 3) {
+				} else if (local_playercount >= 3) {
 					// divide screen into quadrants
 					players[c]->camera().winx = (playerindex % 2) * xres / 2;
 					players[c]->camera().winy = (playerindex / 2) * yres / 2;
@@ -10916,6 +10902,30 @@ bind_failed:
 
 	static std::map<int, std::string> lobbyCustomScenarioClient;
 
+	static void resetMultiplayerStatus() {
+		clientnum = 0;
+	    multiplayer = SINGLE;
+	    client_disconnected[0] = false;
+	    for ( int c = 1; c < MAXPLAYERS; c++ ) {
+		    client_disconnected[c] = true;
+	    }
+		currentLobbyType = LobbyType::None;
+
+		lobbyCustomScenarioClient.clear();
+		gameModeManager.currentSession.restoreSavedServerFlags();
+		gameModeManager.setMode(GameModeManager_t::GAME_MODE_DEFAULT);
+		gameModeManager.currentSession.challengeRun.reset();
+
+	    closeNetworkInterfaces();
+
+		// hide all mouses
+		for (int c = 0; c < MAXPLAYERS; ++c) {
+			auto vmouse = inputs.getVirtualMouse(c);
+			vmouse->lastMovementFromController = true;
+			vmouse->draw_cursor = false;
+		}
+	}
+
 	static void disconnectFromLobby(bool informRemotes = true) {
 		if (informRemotes) {
 			if (multiplayer == SERVER) {
@@ -10951,28 +10961,7 @@ bind_failed:
 
         resetLobbyJoinFlowState();
 
-	    // reset multiplayer status
-	    clientnum = 0;
-	    multiplayer = SINGLE;
-	    client_disconnected[0] = false;
-	    for ( int c = 1; c < MAXPLAYERS; c++ ) {
-		    client_disconnected[c] = true;
-	    }
-		currentLobbyType = LobbyType::None;
-
-		lobbyCustomScenarioClient.clear();
-		gameModeManager.currentSession.restoreSavedServerFlags();
-		gameModeManager.setMode(GameModeManager_t::GAME_MODE_DEFAULT);
-		gameModeManager.currentSession.challengeRun.reset();
-
-	    closeNetworkInterfaces();
-
-		// hide all mouses
-		for (int c = 0; c < MAXPLAYERS; ++c) {
-			auto vmouse = inputs.getVirtualMouse(c);
-			vmouse->lastMovementFromController = true;
-			vmouse->draw_cursor = false;
-		}
+		resetMultiplayerStatus();
 
 #ifdef NINTENDO
 		nxEnableAutoSleep();
@@ -18569,7 +18558,7 @@ failed:
         if (!loadingsavegame) {
 
 		    for (int c = 0; c < MAXPLAYERS; ++c) {
-		        if (type != LobbyType::LobbyJoined && type != LobbyType::LobbyLocal && c != 0) {
+		        if (type != LobbyType::LobbyJoined && type != LobbyType::LobbyLocal && type != LobbyType::LobbyLAN && c != 0) {
 		            newPlayer[c] = true;
 		        }
 		        if (type != LobbyType::LobbyJoined || c == clientnum) {
@@ -19911,15 +19900,15 @@ failed:
 		    int index = button->getOwner();
 		    auto& input = Input::inputs[index];
 		    if (clicked && !input.binary("MenuConfirm")) {
-	            for (auto& input : Input::inputs) {
-	                input.refresh(); // this has to be deferred because it knocks out consumed statuses.
-	            }
+				for (auto& input : Input::inputs) {
+					input.refresh(); // this has to be deferred because it knocks out consumed statuses.
+				}
 		        auto parent = static_cast<Frame*>(button->getParent());
 		        parent = static_cast<Frame*>(parent->getParent());
-	            parent->removeSelf();
-	            parent->setDisabled(true);
-	            soundActivate();
-	            end_func();
+		           parent->removeSelf();
+		           parent->setDisabled(true);
+		           soundActivate();
+				end_func();
 		    }
 		    };
 
@@ -19994,7 +19983,11 @@ failed:
 
 	    int num = 0;
 	    for (int c = 0; c < MAXPLAYERS; ++c) {
-	        if ((multiplayer == SINGLE && isPlayerSignedIn(c)) || (multiplayer != SINGLE && c == 0)) {
+	        if (
+				multiplayer == SINGLE && isPlayerSignedIn(c)
+			|| (multiplayer == CLIENT || multiplayer == SERVER) && currentLobbyType == LobbyType::LobbyLAN && c < MAX_SPLITSCREEN
+			|| multiplayer != SINGLE && c == 0
+			) {
                 const char* path = inputs.hasController(c) || inputs.getPlayerIDAllowedKeyboard() != c ?
                     Input::getControllerGlyph(c) : Input::getKeyboardGlyph(c);
                 auto image = Image::get(path);

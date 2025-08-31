@@ -200,7 +200,7 @@ bool GameController::open(int sdl_which, int index)
 #endif
 }
 
-void GameController::initBindings() 
+void GameController::initBindings()
 {
 	for ( int i = SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_A; i < SDL_GameControllerButton::SDL_CONTROLLER_BUTTON_MAX; ++i )
 	{
@@ -373,7 +373,7 @@ void GameController::handleAnalog(int player)
 				}
 				DpadDirection oldDpad = virtualDpad.padVirtualDpad;
 				virtualDpad.padVirtualDpad = dir;
-				if ( oldDpad != virtualDpad.padVirtualDpad ) 
+				if ( oldDpad != virtualDpad.padVirtualDpad )
 				{
 					// unconsume the input whenever it's released or pressed again.
 					virtualDpad.consumed = false;
@@ -504,7 +504,7 @@ void GameController::handleAnalog(int player)
 
 		//real_t x = SDL_GameControllerGetAxis(sdl_device, SDL_CONTROLLER_AXIS_RIGHTX);
 		//real_t y = SDL_GameControllerGetAxis(sdl_device, SDL_CONTROLLER_AXIS_RIGHTY);
-	
+
 		if ( rightx || righty )
 		{
 			const auto& mouse = inputs.getVirtualMouse(player);
@@ -931,7 +931,7 @@ bool Player::GUI_t::handleCharacterSheetMovement()
 			{
 				elementSelectableList.push_back(e);
 			}
-			if ( Input::inputs[player].binaryToggle("InventoryMoveLeft") 
+			if ( Input::inputs[player].binaryToggle("InventoryMoveLeft")
 				|| Input::inputs[player].binaryToggle("InventoryMoveLeftAnalog")
 				|| Input::inputs[player].binaryToggle("InventoryMoveRight")
 				|| Input::inputs[player].binaryToggle("InventoryMoveRightAnalog") )
@@ -1298,7 +1298,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 	if ( input.binaryToggle("UINavLeftBumper")
 		|| (checkLeftNavigation && checkDestinationOnly) )
 	{
-		if ( activeModule == MODULE_INVENTORY 
+		if ( activeModule == MODULE_INVENTORY
 			&& (player.inventoryUI.bFirstTimeSnapCursor || checkDestinationOnly ) )
 		{
 			if ( player.shopGUI.bOpen && player.gui_mode == GUI_MODE_SHOP )
@@ -1413,7 +1413,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				return MODULE_CHARACTERSHEET;
 			}
 		}
-		else if ( activeModule == MODULE_SPELLS 
+		else if ( activeModule == MODULE_SPELLS
 			&& (player.inventoryUI.spellPanel.bFirstTimeSnapCursor || checkDestinationOnly) )
 		{
 			if ( player.shopGUI.bOpen || player.inventoryUI.chestGUI.bOpen || player.ghost.isActive() )
@@ -1515,7 +1515,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				}
 				return MODULE_CHARACTERSHEET;
 			}
-			else if ( player.inventory_mode == INVENTORY_MODE_SPELL 
+			else if ( player.inventory_mode == INVENTORY_MODE_SPELL
 				&& (player.inventoryUI.spellPanel.bFirstTimeSnapCursor || checkDestinationOnly ) )
 			{
 				if ( !checkDestinationOnly )
@@ -1528,7 +1528,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				}
 				return MODULE_SPELLS;
 			}
-			else if ( player.inventory_mode == INVENTORY_MODE_ITEM 
+			else if ( player.inventory_mode == INVENTORY_MODE_ITEM
 				&& (player.inventoryUI.bFirstTimeSnapCursor || checkDestinationOnly ) )
 			{
 				if ( !checkDestinationOnly )
@@ -1590,7 +1590,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				return MODULE_INVENTORY;
 			}
 		}
-		else if ( activeModule == MODULE_CHARACTERSHEET 
+		else if ( activeModule == MODULE_CHARACTERSHEET
 			&& (player.characterSheet.isInteractable || checkDestinationOnly) )
 		{
 			if ( bCompactView && player.hud.compactLayoutMode == Player::HUD_t::COMPACT_LAYOUT_CHARSHEET )
@@ -1663,7 +1663,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 	if ( input.binaryToggle("UINavRightBumper")
 		|| (!checkLeftNavigation && checkDestinationOnly) )
 	{
-		if ( activeModule == MODULE_INVENTORY 
+		if ( activeModule == MODULE_INVENTORY
 			&& (player.inventoryUI.bFirstTimeSnapCursor || checkDestinationOnly) )
 		{
 			if ( player.shopGUI.bOpen && player.gui_mode == GUI_MODE_SHOP )
@@ -1778,7 +1778,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				return MODULE_HOTBAR;
 			}
 		}
-		else if ( activeModule == MODULE_SPELLS 
+		else if ( activeModule == MODULE_SPELLS
 			&& (player.inventoryUI.spellPanel.bFirstTimeSnapCursor || checkDestinationOnly ) )
 		{
 			if ( player.shopGUI.bOpen || player.inventoryUI.chestGUI.bOpen || player.ghost.isActive() )
@@ -1882,7 +1882,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 			}
 			else if ( inputs.getUIInteraction(player.playernum)->selectedItem || bCompactView )
 			{
-				if ( player.inventory_mode == INVENTORY_MODE_SPELL 
+				if ( player.inventory_mode == INVENTORY_MODE_SPELL
 					&& (player.inventoryUI.spellPanel.bFirstTimeSnapCursor || checkDestinationOnly ) )
 				{
 					if ( !checkDestinationOnly )
@@ -1895,7 +1895,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 					}
 					return MODULE_SPELLS;
 				}
-				else if ( player.inventory_mode == INVENTORY_MODE_ITEM 
+				else if ( player.inventory_mode == INVENTORY_MODE_ITEM
 					&& (player.inventoryUI.bFirstTimeSnapCursor || checkDestinationOnly) )
 				{
 					if ( !checkDestinationOnly )
@@ -1990,7 +1990,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				return MODULE_CHARACTERSHEET;
 			}
 		}
-		else if ( activeModule == MODULE_CHARACTERSHEET 
+		else if ( activeModule == MODULE_CHARACTERSHEET
 			&& (player.characterSheet.isInteractable || checkDestinationOnly) )
 		{
 			if ( bCompactView && player.hud.compactLayoutMode == Player::HUD_t::COMPACT_LAYOUT_CHARSHEET )
@@ -2010,7 +2010,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				}
 				return MODULE_CHARACTERSHEET;
 			}
-			else if ( player.inventory_mode == INVENTORY_MODE_SPELL 
+			else if ( player.inventory_mode == INVENTORY_MODE_SPELL
 				&& (player.inventoryUI.spellPanel.bFirstTimeSnapCursor || checkDestinationOnly) )
 			{
 				if ( !checkDestinationOnly )
@@ -2023,7 +2023,7 @@ Player::GUI_t::GUIModules Player::GUI_t::handleModuleNavigation(bool checkDestin
 				}
 				return MODULE_SPELLS;
 			}
-			else if ( player.inventory_mode == INVENTORY_MODE_ITEM 
+			else if ( player.inventory_mode == INVENTORY_MODE_ITEM
 				&& (player.inventoryUI.bFirstTimeSnapCursor || checkDestinationOnly) )
 			{
 				if ( !checkDestinationOnly )
@@ -2063,12 +2063,12 @@ void Player::soundModuleNavigation()
 	playSound(494, *cvar_game_ui_sfx_volume);
 }
 
-void Player::soundActivate() 
+void Player::soundActivate()
 {
 	playSound(493, *cvar_game_ui_sfx_volume);
 }
 
-void Player::soundCancel() 
+void Player::soundCancel()
 {
 	playSound(499, *cvar_game_ui_sfx_volume);
 }
@@ -2099,8 +2099,8 @@ bool Player::GUI_t::handleInventoryMovement()
 		return false;
 	}
 
-	bool rightStickMovement = 
-		!(this->player.inventoryUI.itemTooltipDisplay.expanded 
+	bool rightStickMovement =
+		!(this->player.inventoryUI.itemTooltipDisplay.expanded
 			&& (players[player]->GUI.activeModule != Player::GUI_t::MODULE_INVENTORY
 				|| players[player]->GUI.activeModule != Player::GUI_t::MODULE_HOTBAR))
 		&& players[player]->GUI.activeModule != Player::GUI_t::MODULE_FEATHER
@@ -2198,15 +2198,15 @@ bool Player::GUI_t::handleInventoryMovement()
 				return false;
 			}
 			select_spell_slot(player,
-				players[player]->inventoryUI.getSelectedSpellX(), 
+				players[player]->inventoryUI.getSelectedSpellX(),
 				players[player]->inventoryUI.getSelectedSpellY(),
 				-1, 0);
 		}
 		else
 		{
 			//Navigate inventory.
-			select_inventory_slot(player, 
-				players[player]->inventoryUI.getSelectedSlotX(), 
+			select_inventory_slot(player,
+				players[player]->inventoryUI.getSelectedSlotX(),
 				players[player]->inventoryUI.getSelectedSlotY(),
 				-1, 0);
 		}
@@ -2510,7 +2510,7 @@ bool Player::GUI_t::handleInventoryMovement()
 				{
 					players[player]->inventoryUI.selectSpell(itemToSnapTo->x, itemToSnapTo->y);
 				}
-				players[player]->inventoryUI.spellPanel.scrollToSlot(players[player]->inventoryUI.getSelectedSpellX(), 
+				players[player]->inventoryUI.spellPanel.scrollToSlot(players[player]->inventoryUI.getSelectedSpellX(),
 					players[player]->inventoryUI.getSelectedSpellY(), false);
 				players[player]->GUI.activateModule(Player::GUI_t::MODULE_SPELLS);
 			}
@@ -2804,12 +2804,12 @@ GameController::Haptic_t::HapticEffect* GameController::handleRumble()
 		}
 	}
 
-	if ( rumbleToPlay != haptics.activeRumbles.end() 
+	if ( rumbleToPlay != haptics.activeRumbles.end()
 #ifdef NINTENDO
 		/*constantly update for all patterns*/ )
 #else
-		&& (!rumbleToPlay->second.isPlaying 
-			|| rumbleToPlay->second.pattern == Haptic_t::RUMBLE_BOULDER 
+		&& (!rumbleToPlay->second.isPlaying
+			|| rumbleToPlay->second.pattern == Haptic_t::RUMBLE_BOULDER
 			|| rumbleToPlay->second.pattern == Haptic_t::RUMBLE_BOULDER_BOUNCE
 			|| rumbleToPlay->second.pattern == Haptic_t::RUMBLE_DEATH
 			|| rumbleToPlay->second.pattern == Haptic_t::RUMBLE_TMP))
@@ -2911,7 +2911,7 @@ void Inputs::addRumbleRemotePlayer(const int player, Uint32 hapticType, Uint32 u
 {
 	if ( multiplayer != SERVER ) { return; }
 	if ( player <= 0 || player >= MAXPLAYERS ) { return; }
-	if ( players[player]->isLocalPlayer() ) 
+	if ( players[player]->isLocalPlayer() )
 	{
 		return;
 	}
@@ -3177,7 +3177,7 @@ const bool Player::isLocalPlayerAlive() const
 	return (isLocalPlayer() && entity && !client_disconnected[playernum]);
 }
 
-Entity* Player::getPlayerInteractEntity(const int playernum) 
+Entity* Player::getPlayerInteractEntity(const int playernum)
 {
 	if ( playernum < 0 || playernum >= MAXPLAYERS )
 	{
@@ -3341,8 +3341,8 @@ real_t Player::WorldUI_t::tooltipInRange(Entity& tooltip)
 		callout = true;
 		maxDist = 256;
 	}
-	else if ( parent 
-		&& (parent->getMonsterTypeFromSprite() == SHOPKEEPER 
+	else if ( parent
+		&& (parent->getMonsterTypeFromSprite() == SHOPKEEPER
 			|| (parent->behavior == &actFloorDecoration && parent->sprite == 991 /* sign */)
 			|| (parent->behavior == &actMonster && (monsterIsFriendlyForTooltip(player.playernum, *parent)))
 			|| (parent->monsterAllyGetPlayerLeader()
@@ -3481,7 +3481,7 @@ real_t Player::WorldUI_t::tooltipInRange(Entity& tooltip)
 			{
 				return 0.0;
 			}
-			if ( parent->behavior == &actPlayer 
+			if ( parent->behavior == &actPlayer
 				|| (parent->behavior == &actMonster && !(parent->isInertMimic())) )
 			{
 				interactAngle = PI / 16;
@@ -3496,7 +3496,7 @@ real_t Player::WorldUI_t::tooltipInRange(Entity& tooltip)
 			}
 			else if ( parent->behavior == &actFurniture )
 			{
-				if ( parent->furnitureType == FURNITURE_BED 
+				if ( parent->furnitureType == FURNITURE_BED
 					|| parent->furnitureType == FURNITURE_BUNKBED
 					|| parent->furnitureType == FURNITURE_TABLE )
 				{
@@ -3534,10 +3534,10 @@ real_t Player::WorldUI_t::tooltipInRange(Entity& tooltip)
 
 			if ( selectInteract )
 			{
-				if ( parent->behavior == &actMonster 
+				if ( parent->behavior == &actMonster
 					&& !(parent->isInertMimic())
-					&& ((multiplayer != CLIENT && parent->checkEnemy(player.entity)) 
-						|| (multiplayer == CLIENT 
+					&& ((multiplayer != CLIENT && parent->checkEnemy(player.entity))
+						|| (multiplayer == CLIENT
 							&& !parent->monsterAllyGetPlayerLeader() && !monsterally[parent->getMonsterTypeFromSprite()][stats[player.playernum]->type])) )
 				{
 					// monsters have wider interact angle for aim assist
@@ -3889,59 +3889,59 @@ void Player::WorldUI_t::setTooltipActive(Entity& tooltip)
 		}
 		else if ( parent->behavior == &actFountain )
 		{
-			interactText = Language::get(4002); // "Drink from fountain" 
+			interactText = Language::get(4002); // "Drink from fountain"
 		}
 		else if ( parent->behavior == &actSink )
 		{
-			interactText = Language::get(4003); // "Drink from sink" 
+			interactText = Language::get(4003); // "Drink from sink"
 		}
 		else if ( parent->behavior == &actChestLid || parent->behavior == &actChest )
 		{
 			if ( parent->skill[1] == 1 )
 			{
-				interactText = Language::get(4004); // "Close chest" 
+				interactText = Language::get(4004); // "Close chest"
 			}
 			else if ( parent->skill[1] == 0 )
 			{
-				interactText = Language::get(4005); // "Open chest" 
+				interactText = Language::get(4005); // "Open chest"
 			}
 		}
 		else if ( parent->behavior == &actTorch )
 		{
 			if ( foundTinkeringKit )
 			{
-				interactText = Language::get(4006); // "Salvage torch" 
+				interactText = Language::get(4006); // "Salvage torch"
 			}
 			else
 			{
-				interactText = Language::get(4007); // "Take torch" 
+				interactText = Language::get(4007); // "Take torch"
 			}
 		}
 		else if ( parent->behavior == &actCrystalShard )
 		{
 			if ( foundTinkeringKit )
 			{
-				interactText = Language::get(4008); // "Salvage shard" 
+				interactText = Language::get(4008); // "Salvage shard"
 			}
 			else
 			{
-				interactText = Language::get(4009); // "Take shard" 
+				interactText = Language::get(4009); // "Take shard"
 			}
 		}
 		else if ( parent->behavior == &actHeadstone )
 		{
-			interactText = Language::get(4010); // "Inspect gravestone" 
+			interactText = Language::get(4010); // "Inspect gravestone"
 		}
 		else if ( parent->behavior == &actMonster )
 		{
 			int monsterType = parent->getMonsterTypeFromSprite();
 			if ( parent->isInertMimic() )
 			{
-				interactText = Language::get(4005); // "Open chest" 
+				interactText = Language::get(4005); // "Open chest"
 			}
 			else
 			{
-				std::string name = Language::get(4011); // "follower" 
+				std::string name = Language::get(4011); // "follower"
 				if ( parent->getStats() && strcmp(parent->getStats()->name, "") )
 				{
 					name = parent->getStats()->name;
@@ -3951,7 +3951,7 @@ void Player::WorldUI_t::setTooltipActive(Entity& tooltip)
 					name = getMonsterLocalizedName((Monster)monsterType).c_str();
 				}
 
-				if ( parent->monsterAllyGetPlayerLeader() 
+				if ( parent->monsterAllyGetPlayerLeader()
 					&& parent->monsterAllyGetPlayerLeader() == players[player.playernum]->entity )
 				{
 					if ( parent->monsterIsTinkeringCreation() )
@@ -3977,73 +3977,73 @@ void Player::WorldUI_t::setTooltipActive(Entity& tooltip)
 		{
 			if ( parent->doorStatus != 0 )
 			{
-				interactText = Language::get(4015); // "Close door" 
+				interactText = Language::get(4015); // "Close door"
 			}
 			else
 			{
-				interactText = Language::get(4016); // "Open door" 
+				interactText = Language::get(4016); // "Open door"
 			}
 		}
 		else if ( parent->behavior == &actGate )
 		{
-			interactText = Language::get(4017); // "Inspect gate" 
+			interactText = Language::get(4017); // "Inspect gate"
 		}
 		else if ( parent->behavior == &actSwitch || parent->behavior == &actSwitchWithTimer )
 		{
 			if ( parent->skill[0] == 1 )
 			{
-				interactText = Language::get(4018); // "Deactivate switch" 
+				interactText = Language::get(4018); // "Deactivate switch"
 			}
 			else
 			{
-				interactText = Language::get(4019); // "Activate switch" 
+				interactText = Language::get(4019); // "Activate switch"
 			}
 		}
 		else if ( parent->behavior == &actPowerCrystal )
 		{
-			interactText = Language::get(4020); // "Turn crystal" 
+			interactText = Language::get(4020); // "Turn crystal"
 		}
 		else if ( parent->behavior == &actBoulder )
 		{
-			interactText = Language::get(4021); // "Push boulder" 
+			interactText = Language::get(4021); // "Push boulder"
 		}
 		else if ( parent->behavior == &actPedestalBase )
 		{
 			if ( parent->pedestalHasOrb > 0 )
 			{
-				interactText = Language::get(4022); // "Take orb" 
+				interactText = Language::get(4022); // "Take orb"
 			}
 			else
 			{
-				interactText = Language::get(4023); // "Inspect" 
+				interactText = Language::get(4023); // "Inspect"
 			}
 		}
 		else if ( parent->behavior == &actCampfire )
 		{
-			interactText = Language::get(4024); // "Pull torch" 
+			interactText = Language::get(4024); // "Pull torch"
 		}
 		else if ( parent->behavior == &actFurniture || parent->behavior == &actMCaxe )
 		{
-			interactText = Language::get(4023); // "Inspect" 
+			interactText = Language::get(4023); // "Inspect"
 		}
 		else if ( parent->behavior == &actFloorDecoration )
 		{
 			if ( parent->sprite == 991 ) // sign
 			{
-				interactText = Language::get(4025); // "Read sign" 
+				interactText = Language::get(4025); // "Read sign"
 			}
 			else
 			{
-				interactText = Language::get(4023); // "Inspect" 
+				interactText = Language::get(4023); // "Inspect"
 			}
 		}
 		else if ( parent->behavior == &actBeartrap )
 		{
-			interactText = Language::get(4026); // "Disarm beartrap" 
+			interactText = Language::get(4026); // "Disarm beartrap"
 		}
 		else if ( parent->behavior == &actLadderUp )
 		{
-			interactText = Language::get(4027); // "Inspect trapdoor" 
+			interactText = Language::get(4027); // "Inspect trapdoor"
 		}
 		else if ( parent->behavior == &actBell )
 		{
@@ -4054,15 +4054,15 @@ void Player::WorldUI_t::setTooltipActive(Entity& tooltip)
 		{
 			if ( secretlevel && parent->skill[3] == 1 ) // secret ladder
 			{
-				interactText += Language::get(4028); // "Exit secret level" 
+				interactText += Language::get(4028); // "Exit secret level"
 			}
 			else if ( !secretlevel && parent->skill[3] == 1 ) // secret ladder
 			{
-				interactText += Language::get(4029); // "Enter secret level" 
+				interactText += Language::get(4029); // "Enter secret level"
 			}
 			else
 			{
-				interactText += Language::get(4030); // "Exit dungeon floor" 
+				interactText += Language::get(4030); // "Exit dungeon floor"
 			}
 		}
 		else if ( parent->behavior == &actPortal )
@@ -4071,11 +4071,11 @@ void Player::WorldUI_t::setTooltipActive(Entity& tooltip)
 			{
 				if ( secretlevel )
 				{
-					interactText += Language::get(4028); // "Exit secret level" 
+					interactText += Language::get(4028); // "Exit secret level"
 				}
 				else
 				{
-					interactText += Language::get(4029); // "Enter secret level" 
+					interactText += Language::get(4029); // "Enter secret level"
 				}
 			}
 			else
@@ -4465,7 +4465,7 @@ void Player::WorldUI_t::handleTooltips()
 				}
 			}
 		}
-		
+
 		if ( !bDoingActionHideTooltips )
 		{
 			Entity* ohitentity = hit.entity;
@@ -4549,8 +4549,8 @@ void Player::WorldUI_t::handleTooltips()
 					continue;
 				}
 				parent = uidToEntity(tooltip->parent);
-				if ( parent && parent->flags[INVISIBLE] 
-					&& !(parent->behavior == &actMonster && 
+				if ( parent && parent->flags[INVISIBLE]
+					&& !(parent->behavior == &actMonster &&
 						(parent->getMonsterTypeFromSprite() == DUMMYBOT || parent->getMonsterTypeFromSprite() == MIMIC || parent->getMonsterTypeFromSprite() == BAT_SMALL)) )
 				{
 					continue;
@@ -4993,15 +4993,15 @@ const int Player::HUD_t::getActionIconForPlayer(ActionPrompts prompt, std::strin
 		return -1;
 	}
 
-	if ( prompt == ACTION_PROMPT_MAGIC ) 
-	{ 
+	if ( prompt == ACTION_PROMPT_MAGIC )
+	{
 		promptString = Language::get(4078);
 		return PRO_SPELLCASTING;
 	}
 
 	bool shapeshifted = false;
 	Monster playerRace = HUMAN;
-	
+
 	if ( players[player.playernum]->entity )
 	{
 		playerRace = players[player.playernum]->entity->getMonsterFromPlayerRace(stats[player.playernum]->playerRace);
@@ -5052,9 +5052,9 @@ const int Player::HUD_t::getActionIconForPlayer(ActionPrompts prompt, std::strin
 				}
 
 				if ( allowDefending )
-				{ 
+				{
 					promptString = Language::get(4076);
-					return PRO_SHIELD; 
+					return PRO_SHIELD;
 				}
 				promptString = Language::get(4077);
 				return PRO_STEALTH;
@@ -5550,7 +5550,7 @@ void Inputs::setMouse(const int player, MouseInputs input, Sint32 value)
 		}
 	}
 #else
-	// todo: add condition like getMouse()? && (!getVirtualMouse(player)->lastMovementFromController 
+	// todo: add condition like getMouse()? && (!getVirtualMouse(player)->lastMovementFromController
 	// || (players[player]->shootmode && !gamePaused && !intro))
 	if ( bPlayerUsingKeyboardControl(player) && (!getVirtualMouse(player)->lastMovementFromController
 		|| (players[player]->shootmode && !gamePaused && !intro)) || intro )
@@ -5806,11 +5806,11 @@ void Inputs::warpMouse(const int player, const Sint32 x, const Sint32 y, Uint32 
 		{
 			SDL_WarpMouseInWindow(screen, (x * w) / gw, (y * h) / gh); // this pushes to the SDL event queue
 		}
-		
+
 		// if we don't set mousex/y here, the mouse will flicker until the event is popped
 		mousex = x;
 		mousey = y;
-		
+
 		//// not sure about omousex/y here...
 		omousex = x;
 		omousey = y;
@@ -6284,11 +6284,11 @@ SDL_Rect Inputs::getGlyphRectForInput(const int player, bool pressed, const unsi
 	return defaultRect;
 }
 
-bool GameController::binaryOf(Binding_t& binding) 
+bool GameController::binaryOf(Binding_t& binding)
 {
 	if ( binding.type == Binding_t::CONTROLLER_AXIS || binding.type == Binding_t::CONTROLLER_BUTTON || binding.type == Binding_t::VIRTUAL_DPAD )
 	{
-		if ( binding.type == Binding_t::CONTROLLER_BUTTON ) 
+		if ( binding.type == Binding_t::CONTROLLER_BUTTON )
 		{
 #ifdef NINTENDO
 			switch (binding.padButton) {
@@ -6317,7 +6317,7 @@ bool GameController::binaryOf(Binding_t& binding)
 		{
 			return binding.padVirtualDpad != DpadDirection::CENTERED;
 		}
-		else 
+		else
 		{
 #ifdef NINTENDO
 			if (binding.padAxisNegative) {
@@ -6354,11 +6354,11 @@ bool GameController::binaryOf(Binding_t& binding)
 			}
 #else
 			SDL_GameController* pad = sdl_device;
-			if ( binding.padAxisNegative ) 
+			if ( binding.padAxisNegative )
 			{
 				return SDL_GameControllerGetAxis(pad, binding.padAxis) < -16384;
 			}
-			else 
+			else
 			{
 				return SDL_GameControllerGetAxis(pad, binding.padAxis) > 16384;
 			}
@@ -6369,11 +6369,11 @@ bool GameController::binaryOf(Binding_t& binding)
 	return false;
 }
 
-float GameController::analogOf(Binding_t& binding) 
+float GameController::analogOf(Binding_t& binding)
 {
-	if ( binding.type == Binding_t::CONTROLLER_AXIS || binding.type == Binding_t::CONTROLLER_BUTTON ) 
+	if ( binding.type == Binding_t::CONTROLLER_AXIS || binding.type == Binding_t::CONTROLLER_BUTTON )
 	{
-		if ( binding.type == Binding_t::CONTROLLER_BUTTON ) 
+		if ( binding.type == Binding_t::CONTROLLER_BUTTON )
 		{
 #ifdef NINTENDO
 			switch (binding.padButton) {
@@ -6398,7 +6398,7 @@ float GameController::analogOf(Binding_t& binding)
 			return SDL_GameControllerGetButton(pad, binding.padButton) ? 1.f : 0.f;
 #endif
 		}
-		else 
+		else
 		{
 #ifdef NINTENDO
 			float result = 0.f;
@@ -6438,7 +6438,7 @@ float GameController::analogOf(Binding_t& binding)
 				float result = std::min(SDL_GameControllerGetAxis(pad, binding.padAxis) / 32768.f, 0.f) * -1.f;
 				return (fabs(result) > binding.deadzone) ? result : 0.f;
 			}
-			else 
+			else
 			{
 				float result = std::max(SDL_GameControllerGetAxis(pad, binding.padAxis) / 32767.f, 0.f);
 				return (fabs(result) > binding.deadzone) ? result : 0.f;
@@ -6484,7 +6484,7 @@ void GameController::updateButtons()
 			pressed = true;
 		}
 
-		if ( oldBinary != buttons[i].binary ) 
+		if ( oldBinary != buttons[i].binary )
 		{
 			// unconsume the input whenever it's released or pressed again.
 			//messagePlayer(0, "%d: %d", i, buttons[i].binary ? 1 : 0);
@@ -6933,7 +6933,7 @@ bool Player::PlayerMechanics_t::itemDegradeRoll(Item* item, int* checkInterval)
 			interval = 0;
 		}
 		else if ( item->beatitude > 0
-			|| (item->beatitude < 0 
+			|| (item->beatitude < 0
 				&& !intro && shouldInvertEquipmentBeatitude(stats[player.playernum])) )
 		{
 			interval += std::min(abs(item->beatitude), 2);

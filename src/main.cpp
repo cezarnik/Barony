@@ -336,6 +336,8 @@ Sint32 client_classes[MAXPLAYERS];
 Uint32 client_keepalive[MAXPLAYERS];
 Uint16 portnumber;
 bool client_disconnected[MAXPLAYERS] = { false };
+// These clients are calculated for local splitscreen.
+bool client_is_local[MAXPLAYERS] = { true };
 list_t entitiesdeleted;
 
 // fps
@@ -762,11 +764,11 @@ char* getTimeAndDateFormatted(time_t t, char* buf, size_t size) {
 void getTimeAndDate(time_t t, int* year, int* month, int* day, int* hour, int* min, int* second) {
     char buf[32];
     getTimeAndDateFormatted(t, buf, sizeof(buf));
-    
+
     int _year, _month, _day, _hour, _min, _second;
     const int result = sscanf(buf, "%d-%d-%d %d-%d-%d", &_year, &_month, &_day, &_hour, &_min, &_second);
     assert(result == 6);
-    
+
     if (year) { *year = _year; }
     if (month) { *month = _month; }
     if (day) { *day = _day; }
